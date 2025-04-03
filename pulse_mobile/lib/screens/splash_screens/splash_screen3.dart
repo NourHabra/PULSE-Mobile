@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pulse_mobile/theme/app_light_mode_colors.dart';
 
+import '../../widgets/bottombar.dart';
+
 class Splash3 extends StatelessWidget {
 
 
@@ -90,6 +92,8 @@ class Splash3 extends StatelessWidget {
           ),
         ),
       ),
+      
+
     );
   }
 }
