@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:pulse_mobile/theme/app_light_mode_colors.dart';
 import '../../widgets/splash_arrow_forward_button.dart';
 
@@ -83,7 +82,7 @@ class SplashContent extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: currentPage == 0
                         ? AppLightModeColors.mainColor
-                        : AppLightModeColors.splash_light_blue,
+                        : AppLightModeColors.splashLightBlue,
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -94,7 +93,7 @@ class SplashContent extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: currentPage == 1
                         ? AppLightModeColors.mainColor
-                        : AppLightModeColors.splash_light_blue,
+                        : AppLightModeColors.splashLightBlue,
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -105,7 +104,7 @@ class SplashContent extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: currentPage == 2
                         ? AppLightModeColors.mainColor
-                        : AppLightModeColors.splash_light_blue,
+                        : AppLightModeColors.splashLightBlue,
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),

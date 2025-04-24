@@ -12,7 +12,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   get: ^4.7.2
   flutter_feather_icons: ^2.0.0+1
-
+  flutter_secure_storage: ^9.2.4
+  cached_network_image: ^3.2.1
+  flutter_svg: ^1.1.6
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +29,5 @@ flutter:
     - assets/doctor2.png
     - assets/doctor3.png
     - assets/logo_blue.png
+    - assets/Google_Icon.webp
+    - assets/Apple-Logo.png

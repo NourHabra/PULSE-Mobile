@@ -4,12 +4,13 @@ import '../../widgets/skip_button.dart';
 import '../../widgets/splash_screen_widget.dart';
 
 class Splash2 extends StatefulWidget {
+  const Splash2({super.key});
+
   @override
   _Splash2State createState() => _Splash2State();
 }
-
 class _Splash2State extends State<Splash2> {
-  bool _buttonPressed = false;
+  // Removed: bool _buttonPressed = false;
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -18,7 +19,6 @@ class _Splash2State extends State<Splash2> {
     _pageController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class _Splash2State extends State<Splash2> {
                 imageAsset: 'assets/doctor1.png',
                 text: 'Keep your health in check!',
                 onForwardPressed: () {
-                  _buttonPressed = true;
+                  // Removed: _buttonPressed = true;
                   if (_currentPage < 2) {
                     _pageController.nextPage(
                       duration: Duration(milliseconds: 300),
@@ -46,13 +46,13 @@ class _Splash2State extends State<Splash2> {
                     );
                   }
                 },
-                currentPage: _currentPage, // Pass currentPage
+                currentPage: _currentPage,
               ),
               SplashContent(
                 imageAsset: 'assets/doctor2.png',
                 text: 'Track your medical record!',
                 onForwardPressed: () {
-                  _buttonPressed = true;
+                  // Removed: _buttonPressed = true;
                   if (_currentPage < 2) {
                     _pageController.nextPage(
                       duration: Duration(milliseconds: 300),
@@ -60,16 +60,16 @@ class _Splash2State extends State<Splash2> {
                     );
                   }
                 },
-                currentPage: _currentPage, // Pass currentPage
+                currentPage: _currentPage,
               ),
               SplashContent(
                 imageAsset: 'assets/doctor3.png',
                 text: 'Find alot of specialist doctors in one place',
                 onForwardPressed: () {
-                  _buttonPressed = true;
+                  // Removed: _buttonPressed = true;
                   Get.offNamed('/splash3');
                 },
-                currentPage: _currentPage, // Pass currentPage
+                currentPage: _currentPage,
               ),
             ],
           ),

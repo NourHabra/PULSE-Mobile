@@ -12,10 +12,10 @@ class _NotificationScreen1State extends State<NotificationScreen1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('record Screen'),
+        title: const Text('notification Screen'),
       ),
       body: const Center(
-        child: Text('This is the record Screen'),
+        child: Text('This is the notification Screen'),
       ),
       bottomNavigationBar:CustomBottomNavBar() ,
     );

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pulse_mobile/theme/app_light_mode_colors.dart';
-import '../../widgets/splash_arrow_forward_button.dart';
 
 class SkipButton extends StatelessWidget {
   final VoidCallback onPressed;

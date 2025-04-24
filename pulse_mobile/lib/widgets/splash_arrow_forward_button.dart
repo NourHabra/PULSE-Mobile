@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pulse_mobile/theme/app_light_mode_colors.dart';
-import 'package:get/get.dart';
 
 class ArrowForwardButton extends StatelessWidget {
   final VoidCallback onPressed;

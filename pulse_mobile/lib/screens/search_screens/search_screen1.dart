@@ -12,10 +12,10 @@ class _SearchScreen1State extends State<SearchScreen1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('record Screen'),
+        title: const Text('search Screen'),
       ),
       body: const Center(
-        child: Text('This is the record Screen'),
+        child: Text('This is the search Screen'),
       ),
       bottomNavigationBar:CustomBottomNavBar() ,
     );

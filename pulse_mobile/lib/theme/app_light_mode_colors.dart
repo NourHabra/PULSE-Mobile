@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class AppLightModeColors {
-  static Color mainColor = Color(0xFF216FB3);
-  static Color splash_light_blue = Color(0xFFBBD3E9);
-  static Color bottomBar_border= Color(0xFFD3D6DA);
-  static Color icons=Color(0xFFADADAD);
+  static const Color mainColor = Color(0xFF216FB3);
+  static const Color splashLightBlue = Color(0xFFBBD3E9);
+  static const Color bottomBarBorder= Color(0xFFD3D6DA);
+  static const Color icons=Color(0xFFADADAD);
+  static const Color textFieldBackground = Color(0x47E5EAEE);
+  static const Color textFieldBorder =  Color(0xFFE5E7EB);
+  static const Color blueText= Color(0xFF639AC8);
 
 // ... more colors ...
 }

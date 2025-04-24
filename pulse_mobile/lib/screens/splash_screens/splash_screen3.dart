@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pulse_mobile/theme/app_light_mode_colors.dart';
 
-import '../../widgets/bottombar.dart';
+import '../../widgets/vital_card_homepage.dart';
+
 
 class Splash3 extends StatelessWidget {
+  const Splash3({super.key});
+
 
 
   @override
@@ -47,22 +50,22 @@ class Splash3 extends StatelessWidget {
                 width: 260,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigate to Login screen
-                    // Get.toNamed('/login'); // Replace '/login' with your login route
-                  },
-                  child: Text('Log in',
-                    style: TextStyle(
-                      color: Colors.white, // Set text color to white
-                      fontSize: 18,        // Set text size to 18
-                    ),
 
-                  ),
+                    Get.toNamed('/login');
+                  },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 16),
                     backgroundColor: AppLightModeColors.mainColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
+                  ),
+                  child: Text('Log in',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+
                   ),
                 ),
               ),
@@ -74,11 +77,6 @@ class Splash3 extends StatelessWidget {
                     // Navigate to Sign Up screen
                     // Get.toNamed('/signup'); // Replace '/signup' with your signup route
                   },
-                  child: Text('Sign Up',
-                    style: TextStyle(
-                      color: AppLightModeColors.mainColor,
-                      fontSize: 18,
-                    ),),
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -86,13 +84,19 @@ class Splash3 extends StatelessWidget {
                     ),
                     side: BorderSide(color: AppLightModeColors.mainColor), // Match the border color
                   ),
+                  child: Text('Sign Up',
+                    style: TextStyle(
+                      color: AppLightModeColors.mainColor,
+                      fontSize: 18,
+                    ),),
                 ),
               ),
+
             ],
           ),
         ),
       ),
-      
+
 
     );
   }

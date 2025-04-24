@@ -53,7 +53,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
       elevation: 0.0,
       shape: Border(
         top: BorderSide(
-          color: AppLightModeColors.bottomBar_border,
+          color: AppLightModeColors.bottomBarBorder,
           width: 1.5,
         ),
       ),

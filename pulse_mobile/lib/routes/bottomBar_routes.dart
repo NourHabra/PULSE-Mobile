@@ -5,7 +5,6 @@ import '../screens/notification_screens/notification_screen1.dart';
 import '../screens/profile_screens/profile_screen1.dart';
 import '../screens/search_screens/search_screen1.dart';
 
-
 List<GetPage> getPages = [
   GetPage(name: '/home1', page: () => HomeScreen1()),
   GetPage(name: '/notification1', page: () => NotificationScreen1()),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pulse_mobile/routes/splash_routes.dart';
 import 'package:pulse_mobile/theme/app_light_mode_colors.dart';
 class Splash1 extends StatelessWidget {
+  const Splash1({super.key});
+
   @override
   Widget build(BuildContext context) {
      //Navigate to Splash2 after 3 seconds
