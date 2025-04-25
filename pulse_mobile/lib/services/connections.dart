@@ -259,38 +259,40 @@ class ApiService extends GetxService {
   }
 
   Future<Map<String, dynamic>> signUp(SignupUserModel user) async {
+    if (user.bloodTestImage == null || user.idImage == null) {
+      return {
+        'success': false,
+        'message': 'Please upload both blood test and ID images.',
+      };
+    }
+
     final url = Uri.parse('$baseUrl/api/auth/signup');
     var request = http.MultipartRequest('POST', url);
 
-    //  Changed to request.fields.addAll(user.toJson());
     request.fields.addAll(user.toJson());
 
-    http.MultipartFile? bloodTestFile; // Declare outside the if
-    http.MultipartFile? idFile; // Declare outside the if
+    http.MultipartFile? bloodTestFile;
+    http.MultipartFile? idFile;
 
-    if (user.bloodTestImage != null) {
-      var bloodTestStream = http.ByteStream(user.bloodTestImage!.openRead());
-      var bloodTestLength = await user.bloodTestImage!.length();
-      bloodTestFile = http.MultipartFile(
-        'bloodTestImage',
-        bloodTestStream,
-        bloodTestLength,
-        filename: 'blood_test_image.jpg',
-      );
-      request.files.add(bloodTestFile);
-    }
+    var bloodTestStream = http.ByteStream(user.bloodTestImage!.openRead());
+    var bloodTestLength = await user.bloodTestImage!.length();
+    bloodTestFile = http.MultipartFile(
+      'bloodTestImage',
+      bloodTestStream,
+      bloodTestLength,
+      filename: 'blood_test_image.jpg',
+    );
+    request.files.add(bloodTestFile);
 
-    if (user.idImage != null) {
-      var idStream = http.ByteStream(user.idImage!.openRead());
-      var idLength = await user.idImage!.length();
-      idFile = http.MultipartFile(
-        'idImage',
-        idStream,
-        idLength,
-        filename: 'id_image.jpg',
-      );
-      request.files.add(idFile);
-    }
+    var idStream = http.ByteStream(user.idImage!.openRead());
+    var idLength = await user.idImage!.length();
+    idFile = http.MultipartFile(
+      'idImage',
+      idStream,
+      idLength,
+      filename: 'id_image.jpg',
+    );
+    request.files.add(idFile);
 
     try {
       var response = await request.send();
@@ -307,7 +309,7 @@ class ApiService extends GetxService {
           'success': false,
           'message':
           responseData['message'] ?? 'Signup failed. Please try again.',
-          'error': responseBody, // Include the raw error for debugging
+          'error': responseBody,
         };
       }
     } catch (e) {
@@ -316,8 +318,6 @@ class ApiService extends GetxService {
         'message': 'Error: $e',
         'error': e.toString(),
       };
-    } finally {
-      //  httpClient.close(); // Removed close() here, we close in onClose
     }
   }
 

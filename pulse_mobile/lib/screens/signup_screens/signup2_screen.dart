@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pulse_mobile/theme/app_light_mode_colors.dart';
-import 'package:pulse_mobile/widgets/custom_textfield.dart'; // Import your CustomTextField
+import 'package:pulse_mobile/widgets/custom_textfield.dart';
 
 import '../../controllers/signup/signup_controller.dart';
 
@@ -77,7 +77,6 @@ class SignUpPage2 extends GetView<SignUpController> {
                   hintText: 'dd/mm/yyyy',
                   prefixIcon: Icons.calendar_today_outlined,
                   readOnly: true,
-
                 ),
               ),
               const SizedBox(height: 15),
@@ -87,13 +86,11 @@ class SignUpPage2 extends GetView<SignUpController> {
                 prefixIcon: Icons.location_on_outlined,
               ),
               const SizedBox(height: 20),
-              Row(
+              Obx(() => Row(
                 children: [
                   Checkbox(
-                    value: true, // Replace with your actual agreement state
-                    onChanged: (bool? value) {
-                      // Handle checkbox state
-                    },
+                    value: controller.isTermsAgreed.value,
+                    onChanged: controller.setTermsAgreed,
                     activeColor: AppLightModeColors.mainColor,
                   ),
                   const Expanded(
@@ -103,13 +100,14 @@ class SignUpPage2 extends GetView<SignUpController> {
                     ),
                   ),
                 ],
-              ),
+              )),
               const SizedBox(height: 20),
-              SizedBox(
+              Obx(() => SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed:
-                  controller.isLoading.value ? null : controller.goToNextPage,
+                  onPressed: controller.isLoading.value || !controller.isTermsAgreed.value
+                      ? null
+                      : controller.goToNextPage,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppLightModeColors.mainColor,
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -121,10 +119,11 @@ class SignUpPage2 extends GetView<SignUpController> {
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
                     'Continue',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    style:
+                    TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
-              ),
+              )),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -28,6 +28,17 @@ class SignUpController extends GetxController {
 
   // --- Navigation ---
   final currentPage = 1.obs;
+  final isPasswordVisible = false.obs; // Add this
+  final isTermsAgreed = false.obs; // ADD THIS LINE
+
+  void togglePasswordVisibility() {
+    isPasswordVisible.value = !isPasswordVisible.value;
+  }
+
+  // ADD THIS METHOD
+  void setTermsAgreed(bool? value) {
+    isTermsAgreed.value = value ?? false;
+  }
 
   // --- ApiService Instance ---
   final ApiService apiService = Get.find<ApiService>();
@@ -37,7 +48,7 @@ class SignUpController extends GetxController {
     super.onInit();
   }
 
- void goToNextPage() {
+  void goToNextPage() {
     print('Current Page: ${currentPage.value}');
     print('Email: ${emailController.text}');
     print('Password: ${passwordController.text}');

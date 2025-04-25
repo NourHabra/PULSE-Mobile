@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pulse_mobile/theme/app_light_mode_colors.dart';
 import 'package:pulse_mobile/widgets/appbar.dart';
-import 'package:pulse_mobile/widgets/custom_textfield.dart'; // Import your CustomTextField
+import 'package:pulse_mobile/widgets/custom_textfield.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 import '../../controllers/signup/signup_controller.dart';
 
 class SignUpPage1 extends GetView<SignUpController> {
-   SignUpPage1({super.key});
+  SignUpPage1({super.key});
   final currentPage = 1.obs;
 
   @override
@@ -27,29 +28,27 @@ class SignUpPage1 extends GetView<SignUpController> {
               prefixIcon: Icons.email_outlined,
             ),
             const SizedBox(height: 10),
-            CustomTextField(
+            Obx(() => CustomTextField(
               controller: controller.passwordController,
               hintText: 'Enter your password',
               prefixIcon: Icons.lock_outline,
-              obscureText: true,
-              suffixIcon: Icons.visibility_off_outlined,
-              // You might want to implement the visibility toggle functionality
-              // onSuffixIconTap: () {
-              //   // Implement password visibility toggle
-              // },
-            ),
+              obscureText: !controller.isPasswordVisible.value,
+              suffixIcon: controller.isPasswordVisible.value
+                  ? Icons.visibility_outlined
+                  : Icons.visibility_off_outlined,
+              onSuffixIconTap: controller.togglePasswordVisibility,
+            )),
             const SizedBox(height: 10),
-            CustomTextField(
-              controller: controller.confirmPasswordController, // Connect to the controller
+            Obx(() => CustomTextField(
+              controller: controller.confirmPasswordController,
               hintText: 'Confirm your password',
               prefixIcon: Icons.lock_outline,
-              obscureText: true,
-              suffixIcon: Icons.visibility_off_outlined,
-              // You might want to implement the visibility toggle functionality
-              // onSuffixIconTap: () {
-              //   // Implement password visibility toggle
-              // },
-            ),
+              obscureText: !controller.isPasswordVisible.value,
+              suffixIcon: controller.isPasswordVisible.value
+                  ? Icons.visibility_outlined
+                  : Icons.visibility_off_outlined,
+              onSuffixIconTap: controller.togglePasswordVisibility,
+            )),
             const SizedBox(height: 20),
             Obx(() => Text(
               controller.errorMessage.value,
