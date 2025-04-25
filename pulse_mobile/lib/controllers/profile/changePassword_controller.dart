@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pulse_mobile/services/connections.dart';
-import 'package:pulse_mobile/theme/app_light_mode_colors.dart'; // Import your color theme
 
 class ChangePasswordController extends GetxController {
   // Get the ApiService instance

@@ -1,12 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:pulse_mobile/routes/splash_routes.dart';
 
-import '../../services/auth.dart'; // validate the token
 
 class SplashController extends GetxController {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
-  final AuthService _authService = Get.find(); // Assuming AuthService is injected
 
   @override
   void onInit() {

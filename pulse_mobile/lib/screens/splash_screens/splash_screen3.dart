@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pulse_mobile/theme/app_light_mode_colors.dart';
 
-import '../../widgets/vital_card_homepage.dart';
 
 
 class Splash3 extends StatelessWidget {
@@ -75,7 +74,7 @@ class Splash3 extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: () {
                     // Navigate to Sign Up screen
-                    // Get.toNamed('/signup'); // Replace '/signup' with your signup route
+                     Get.toNamed('/signup1');
                   },
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 16),

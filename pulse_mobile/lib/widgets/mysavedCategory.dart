@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../models/categoryModel.dart';
 import '../theme/app_light_mode_colors.dart';

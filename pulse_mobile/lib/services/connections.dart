@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/categoryModel.dart';
 import '../models/profile_model.dart';
+import '../models/signupModel.dart';
 
 class ApiService extends GetxService {
   final String baseUrl = 'http://10.0.2.2:8080';
@@ -257,9 +258,73 @@ class ApiService extends GetxService {
     }
   }
 
+  Future<Map<String, dynamic>> signUp(SignupUserModel user) async {
+    final url = Uri.parse('$baseUrl/api/auth/signup');
+    var request = http.MultipartRequest('POST', url);
+
+    //  Changed to request.fields.addAll(user.toJson());
+    request.fields.addAll(user.toJson());
+
+    http.MultipartFile? bloodTestFile; // Declare outside the if
+    http.MultipartFile? idFile; // Declare outside the if
+
+    if (user.bloodTestImage != null) {
+      var bloodTestStream = http.ByteStream(user.bloodTestImage!.openRead());
+      var bloodTestLength = await user.bloodTestImage!.length();
+      bloodTestFile = http.MultipartFile(
+        'bloodTestImage',
+        bloodTestStream,
+        bloodTestLength,
+        filename: 'blood_test_image.jpg',
+      );
+      request.files.add(bloodTestFile);
+    }
+
+    if (user.idImage != null) {
+      var idStream = http.ByteStream(user.idImage!.openRead());
+      var idLength = await user.idImage!.length();
+      idFile = http.MultipartFile(
+        'idImage',
+        idStream,
+        idLength,
+        filename: 'id_image.jpg',
+      );
+      request.files.add(idFile);
+    }
+
+    try {
+      var response = await request.send();
+      var responseBody = await response.stream.bytesToString();
+
+      if (response.statusCode == 201) {
+        return {
+          'success': true,
+          'message': 'Signup successful!',
+        };
+      } else {
+        final responseData = json.decode(responseBody);
+        return {
+          'success': false,
+          'message':
+          responseData['message'] ?? 'Signup failed. Please try again.',
+          'error': responseBody, // Include the raw error for debugging
+        };
+      }
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Error: $e',
+        'error': e.toString(),
+      };
+    } finally {
+      //  httpClient.close(); // Removed close() here, we close in onClose
+    }
+  }
+
   @override
   void onClose() {
     _httpClient.close();
     super.onClose();
   }
 }
+

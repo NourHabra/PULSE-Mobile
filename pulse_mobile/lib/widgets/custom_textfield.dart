@@ -9,6 +9,9 @@ class CustomTextField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final bool obscureText;
   final VoidCallback? onSuffixIconTap;
+  final TextInputType? keyboardType; // Add keyboardType parameter
+  final bool readOnly; // Add readOnly parameter
+  final VoidCallback? onTap; // Add onTap parameter
 
   const CustomTextField({
     Key? key,
@@ -19,6 +22,9 @@ class CustomTextField extends StatefulWidget {
     this.onChanged,
     this.obscureText = false,
     this.onSuffixIconTap,
+    this.keyboardType, // Initialize keyboardType
+    this.readOnly = false, // Initialize readOnly with a default value
+    this.onTap, // Initialize onTap
   }) : super(key: key);
 
   @override
@@ -26,21 +32,17 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
-  Color _prefixIconColor =
-      AppLightModeColors.icons; // Default icon color
+  Color _prefixIconColor = AppLightModeColors.icons;
 
   @override
   void initState() {
     super.initState();
-    // Set initial icon color
     _updateIconColor();
-    // Listen for changes in the text field
     widget.controller.addListener(_updateIconColor);
   }
 
   @override
   void dispose() {
-    // Remove listener to prevent memory leaks
     widget.controller.removeListener(_updateIconColor);
     super.dispose();
   }
@@ -71,19 +73,19 @@ class _CustomTextFieldState extends State<CustomTextField> {
             if (widget.prefixIcon != null)
               Padding(
                 padding: const EdgeInsets.only(right: 8.0),
-                child: Icon(widget.prefixIcon,
-                    color: _prefixIconColor), // Use the dynamic color
+                child: Icon(widget.prefixIcon, color: _prefixIconColor),
               ),
             Expanded(
               child: TextField(
                 controller: widget.controller,
                 obscureText: widget.obscureText,
+                keyboardType: widget.keyboardType, // Use the passed keyboardType
+                readOnly: widget.readOnly, // Use the passed readOnly
+                onTap: widget.onTap, // Use the passed onTap
                 decoration: InputDecoration(
                   hintText: widget.hintText,
                   border: InputBorder.none,
-                  hintStyle: const TextStyle(
-                      color: AppLightModeColors
-                          .icons), //keep hint text to default color
+                  hintStyle: const TextStyle(color: AppLightModeColors.icons),
                 ),
                 onChanged: widget.onChanged,
               ),
@@ -93,8 +95,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 onTap: widget.onSuffixIconTap,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child:
-                  Icon(widget.suffixIcon, color: AppLightModeColors.icons),
+                  child: Icon(widget.suffixIcon, color: AppLightModeColors.icons),
                 ),
               ),
           ],
@@ -103,4 +104,3 @@ class _CustomTextFieldState extends State<CustomTextField> {
     );
   }
 }
-

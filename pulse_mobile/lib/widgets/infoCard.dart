@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:get/get.dart';
 class InfoCard extends StatelessWidget {
   final BuildContext context;
   final String title;

@@ -21,12 +21,8 @@ class ProfileController extends GetxController {
     errorMessage.value = '';
     try {
       final fetchedProfile = await apiService.getUserProfile();
-      if (fetchedProfile != null) {
-        profile.value = fetchedProfile;
-      } else {
-        errorMessage.value = 'Failed to load profile data.';
-      }
-    } catch (error) {
+      profile.value = fetchedProfile;
+        } catch (error) {
       errorMessage.value = 'Error: ${error.toString()}';
     } finally {
       isLoading.value = false;

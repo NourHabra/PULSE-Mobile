@@ -8,7 +8,7 @@ class SplashContent extends StatelessWidget {
   final VoidCallback onForwardPressed;
   final int currentPage; // Add currentPage parameter
 
-  SplashContent({
+  const SplashContent({super.key,
     required this.imageAsset,
     required this.text,
     required this.onForwardPressed,
@@ -17,7 +17,7 @@ class SplashContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Stack(
         children: [
@@ -25,12 +25,10 @@ class SplashContent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 30),
-              Container(
-                child: Image.asset(
-                  imageAsset,
-                  width: 400,
-                  height: 450,
-                ),
+              Image.asset(
+                imageAsset,
+                width: 400,
+                height: 450,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 30, right: 30),

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pulse_mobile/widgets/appbar.dart';
 import '../../theme/app_light_mode_colors.dart';
 import '../../widgets/bottombar.dart';
-import '../../widgets/currentMedication.dart';
 import '../../widgets/med&presListItem.dart';
 
 class MedicationsAndPrescriptionsPage extends StatelessWidget {
