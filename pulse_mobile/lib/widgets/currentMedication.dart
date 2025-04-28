@@ -25,9 +25,9 @@ class Currentmedication extends StatelessWidget {
             color: AppLightModeColors.textFieldBorder, // Use your border color
             width: 1.5,
           ),
-          borderRadius: BorderRadius.circular(8.0), // Add border radius for a nice look
+          borderRadius: BorderRadius.circular(12.0), // Add border radius for a nice look
         ),
-        padding: const EdgeInsets.symmetric(vertical: 15.0,horizontal: 18), // Add padding inside the container
+        padding: const EdgeInsets.symmetric(vertical: 18.0,horizontal: 18), // Add padding inside the container
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space them out
           children: [
@@ -38,7 +38,7 @@ class Currentmedication extends StatelessWidget {
                   tradeName,
                   style: const TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     color: Colors.black,
                   ),
                 ),
@@ -47,33 +47,42 @@ class Currentmedication extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 15,
                     color: AppLightModeColors.blueText,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                Text(
-                  numOfTimes,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: AppLightModeColors.blueText,
-                  ),
+                SizedBox(height: 2,),
+                Row(
+                  children: [
+                    SizedBox(width: 3,),
+                    Text(
+                      numOfTimes,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: AppLightModeColors.blueText,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            Row( // Use a Row to combine "Until: " and untilDate
+            Row(
               children: [
+
                 const Text(
                   "Until ",
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     color: AppLightModeColors.blueText,
-                    // You might want it bold
+                    fontWeight: FontWeight.w600
+
                   ),
                 ),
                 Text(
                   untilDate,
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     color: AppLightModeColors.blueText,
+                      fontWeight: FontWeight.w600,
                   ),
                 ),
               ],

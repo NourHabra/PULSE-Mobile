@@ -5,7 +5,8 @@ import 'package:pulse_mobile/routes/login_routes.dart' as login_routes;
 import 'package:pulse_mobile/routes/bottomBar_routes.dart' as bottombar_routes;
 import 'package:pulse_mobile/routes/profile_routes.dart' as profile_routes;
 import 'package:pulse_mobile/routes/signup_routes.dart' as signup_routes;
-import 'package:pulse_mobile/services/connections.dart'; // Import ApiService
+import 'package:pulse_mobile/routes/medications&prescriptions_routes.dart'as medspres_routes;
+import 'package:pulse_mobile/services/connections.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,13 +19,14 @@ class MyApp extends StatelessWidget {
     Get.put(ApiService()); //  before GetMaterialApp
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/splash1',
+      initialRoute: '/profile1',
       getPages: [
         ...splash_routes.getPages,
         ...login_routes.getPages,
         ...bottombar_routes.getPages,
         ...profile_routes.getPages,
         ...signup_routes.getPages,
+        ...medspres_routes.getPages,
       ],
     );
   }

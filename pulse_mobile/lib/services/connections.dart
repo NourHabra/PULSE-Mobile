@@ -3,6 +3,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/categoryModel.dart';
+import '../models/medicationModel.dart';
+import '../models/prescriptionListitemModel.dart';
 import '../models/profile_model.dart';
 import '../models/signupModel.dart';
 
@@ -321,10 +323,94 @@ class ApiService extends GetxService {
     }
   }
 
+  Future<List<Medication>> getCurrentMedications() async {
+    final String? token = await getToken();
+    if (token == null) {
+      return _getFakeMedications(); // Return fake data if no token
+    }
+    final url = Uri.parse('$baseUrl/api/medications/current'); // Replace with your actual API endpoint
+    try {
+      final response = await _httpClient.get(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((json) => Medication.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        print('API Error: ${response.statusCode}');
+        return _getFakeMedications(); // Return fake data on API error
+      }
+    } catch (e) {
+      print('Error fetching current medications: $e');
+      return _getFakeMedications(); // Return fake data on exception
+    }
+  }
+
+  // Method to generate fake medication data
+  List<Medication> _getFakeMedications() {
+    return [
+      Medication(
+        tradeName: 'Fake Panadol',
+        pharmaComposition: 'Fake Acetaminophen',
+        numOfTimes: 'Once a day',
+        untilDate: '30/5/2025',
+      ),
+      Medication(
+        tradeName: 'Fake Advil',
+        pharmaComposition: 'Fake Ibuprofen',
+        numOfTimes: 'Twice a day',
+        untilDate: '05/6/2025',
+      ),
+      Medication(
+        tradeName: 'Fake Claritin',
+        pharmaComposition: 'Fake Loratadine',
+        numOfTimes: 'Once a day',
+        untilDate: '15/6/2025',
+      ),
+    ];
+  }
+
+  Future<List<Prescription>> getPrescriptions() async {
+    final String? token = await getToken();
+    if (token == null) {
+      return _getFakePrescriptions(); // Return fake data if no token
+    }
+    final url = Uri.parse('$baseUrl/api/prescriptions'); // Replace with your actual API endpoint
+    try {
+      final response = await _httpClient.get(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((json) => Prescription.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        print('API Error (Get Prescriptions): ${response.statusCode}');
+        return _getFakePrescriptions(); // Return fake data on API error
+      }
+    } catch (e) {
+      print('Error fetching prescriptions: $e');
+      return _getFakePrescriptions(); // Return fake data on exception
+    }
+  }
+
+  // Method to generate fake prescription data
+  List<Prescription> _getFakePrescriptions() {
+    return [
+      Prescription(id: 1, doctorName: 'Dr. Marcus Horizon', doctorSpeciality: 'Cardiologist', validUntil: '22/5/2025'),
+      Prescription(id: 2, doctorName: 'Dr. Jane Smith', doctorSpeciality: 'Dermatologist', validUntil: '15/6/2025'),
+      Prescription(id: 3, doctorName: 'Dr. Robert Jones', doctorSpeciality: 'Neurologist', validUntil: '01/6/2025'),
+      Prescription(id: 4, doctorName: 'Dr. Emily White', doctorSpeciality: 'Pediatrician', validUntil: '10/5/2025'),
+      Prescription(id: 5, doctorName: 'Dr. David Brown', doctorSpeciality: 'Orthopedist', validUntil: '28/5/2025'),
+    ];
+  }
+
   @override
   void onClose() {
     _httpClient.close();
     super.onClose();
   }
 }
-
