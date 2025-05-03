@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     Get.put(ApiService()); //  before GetMaterialApp
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/profile1',
+      initialRoute: '/splash1',
       getPages: [
         ...splash_routes.getPages,
         ...login_routes.getPages,

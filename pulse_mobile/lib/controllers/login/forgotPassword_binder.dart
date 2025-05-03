@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
-import '../../services/auth.dart';
+import '../../services/connections.dart'; // Import the merged ApiService
 import 'forgotPassword_controller.dart';
 
 class ForgotPasswordBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => AuthService());
+    Get.lazyPut(() => ApiService()); // Register the merged ApiService
     Get.lazyPut(() => ForgotPasswordController(
-        authService: Get.find())); // Inject AuthService
+        apiService: Get.find())); // Inject ApiService
   }
 }

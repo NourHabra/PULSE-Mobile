@@ -2,6 +2,9 @@ import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io'; // Import for HttpClient
+import 'package:http/io_client.dart'; // Import for IOClient
+import 'package:image_picker/image_picker.dart';
 import '../models/categoryModel.dart';
 import '../models/medicationModel.dart';
 import '../models/prescriptionListitemModel.dart';
@@ -9,16 +12,23 @@ import '../models/profile_model.dart';
 import '../models/signupModel.dart';
 
 class ApiService extends GetxService {
-  final String baseUrl = 'http://10.0.2.2:8080';
+  final String baseUrl = 'https://192.168.18.222:8443';
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  final http.Client _httpClient = http.Client();
+  final http.Client _httpClient = _createHttpClient(); // Use custom client for HTTPS (dev only!)
   static const String _tokenKey = 'userToken';
+
+  static http.Client _createHttpClient() {
+    HttpClient client = HttpClient(context: SecurityContext(withTrustedRoots: false));
+    client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+    return IOClient(client);
+  }
 
   @override
   void onInit() {
     super.onInit();
   }
 
+  // Token Management
   Future<void> saveToken(String token) async {
     await _storage.write(key: _tokenKey, value: token);
   }
@@ -29,6 +39,81 @@ class ApiService extends GetxService {
 
   Future<void> deleteToken() async {
     await _storage.delete(key: _tokenKey);
+  }
+
+  // Authentication Services
+  Future<bool> login(String email, String password) async {
+    try {
+      final response = await _httpClient.post(
+        Uri.parse('$baseUrl/auth/login/patient'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }),
+      );
+      print('HTTP Status Code (Login): ${response.statusCode}');
+      print('Response Body (Login): ${response.body}');
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> body = jsonDecode(response.body);
+        final String? token = body['token'];
+        print('///////////');
+        print(token);
+        print('////////');
+        if (token != null) {
+          await saveToken(token);
+          print('yes token');
+          return true;
+        } else {
+          print('Login successful, but no token found in response.');
+          return false;
+        }
+      } else {
+        print('Patient Login failed: ${response.statusCode} - ${response.body}');
+        return false;
+      }
+    } on SocketException catch (e) {
+      print('Network error during login: $e');
+      return false;
+    } on FormatException catch (e) {
+      print('JSON decoding error during login: $e');
+      return false;
+    } catch (e) {
+      print('An unexpected error occurred during login: $e');
+      return false;
+    }
+  }
+
+  Future<void> resetPasswordByEmail(String email) async {
+    final response = await _httpClient.post( // Use _httpClient
+      Uri.parse('$baseUrl/auth/send-otp'),
+      body: {'email': email},
+    );
+    if (response.statusCode == 200) {
+      Get.snackbar('Success', 'OTP sent to your email.',
+          snackPosition: SnackPosition.BOTTOM);
+    } else {
+      Get.snackbar('Error', 'Failed to send reset email. ${response.body}',
+          snackPosition: SnackPosition.BOTTOM);
+      throw Exception('Failed to reset password (email)');
+    }
+  }
+
+  Future<void> resetPasswordByPhone(String phoneNumber) async {
+    final response = await _httpClient.post( // Use _httpClient
+      Uri.parse('$baseUrl/auth/send-otp'),
+      body: {'phone': phoneNumber},
+    );
+    if (response.statusCode == 200) {
+      Get.snackbar('Success', 'OTP sent to your phone number.',
+          snackPosition: SnackPosition.BOTTOM);
+    } else {
+      Get.snackbar('Error', 'Failed to send OTP to phone. ${response.body}',
+          snackPosition: SnackPosition.BOTTOM);
+      throw Exception('Failed to send OTP (phone)');
+    }
   }
 
   Future<Map<String, dynamic>> verifyCode({
@@ -83,6 +168,59 @@ class ApiService extends GetxService {
     }
   }
 
+  Future<void> verifyOTP(String identifier, String otp) async {
+    final response = await _httpClient.post( // Use _httpClient
+      Uri.parse('$baseUrl/auth/verify-otp'),
+      body: {
+        if (identifier.contains('@')) 'email': identifier,
+        if (!identifier.contains('@')) 'phone': identifier,
+        'otp': otp,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.snackbar('Success', 'OTP verified successfully.',
+          snackPosition: SnackPosition.BOTTOM);
+    } else {
+      Get.snackbar('Error', 'Failed to verify OTP. ${response.body}',
+          snackPosition: SnackPosition.BOTTOM);
+      throw Exception('Failed to verify OTP');
+    }
+  }
+
+  Future<void> resetPassword(
+      String identifier, String otp, String newPassword) async {
+    final response = await _httpClient.post( // Use _httpClient
+      Uri.parse('$baseUrl/auth/reset'),
+      body: {
+        if (identifier.contains('@')) 'email': identifier,
+        if (!identifier.contains('@')) 'phone': identifier,
+        'otp': otp,
+        'newPassword': newPassword,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.snackbar('Success', 'Password reset successfully.',
+          snackPosition: SnackPosition.BOTTOM);
+    } else {
+      Get.snackbar('Error', 'Failed to reset password. ${response.body}',
+          snackPosition: SnackPosition.BOTTOM);
+      throw Exception('Failed to reset password');
+    }
+  }
+
+  Future<bool> validateToken() async {
+    final String? token = await getToken();
+    if (token == null) {
+      return false;
+    }
+    final response = await _httpClient.get( // Use _httpClient
+      Uri.parse('$baseUrl/api/validate-token'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    return response.statusCode == 200;
+  }
+
+  // User Profile Services
   Future<Profile> getUserProfile() async {
     final String? token = await getToken();
     if (token == null) {
@@ -114,93 +252,6 @@ class ApiService extends GetxService {
         weight: 70.0,
         bloodType: 'A+',
       );
-    }
-  }
-
-  Future<Map<String, dynamic>> changePassword({
-    required String oldPassword,
-    required String newPassword,
-  }) async {
-    final String? token = await getToken();
-    if (token == null) {
-      throw Exception('User not authenticated');
-    }
-    final url = Uri.parse('$baseUrl/change-password');
-    final response = await _httpClient.post(url, headers: {
-      'Authorization': 'Bearer $token'
-    }, body: {
-      'oldPassword': oldPassword,
-      'newPassword': newPassword,
-    });
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      return {
-        'success': true,
-        'message': data['message'] ?? 'Password changed successfully',
-      };
-    } else {
-      final Map<String, dynamic> errorData = json.decode(response.body);
-      throw Exception(
-          'Failed to change password: ${response.statusCode}, ${errorData['message']}');
-    }
-  }
-
-  Future<List<Category>> getCategories() async {
-    final String? token = await getToken();
-    if (token == null) {
-      return [
-        Category(
-            id: 1,
-            title: 'Doctors',
-            imageUrl:
-            'https://via.placeholder.com/50/007BFF/FFFFFF?Text=Doctors'),
-        Category(
-            id: 2,
-            title: 'Pharmacies',
-            imageUrl:
-            'https://via.placeholder.com/50/28A745/FFFFFF?Text=Pharmacies'),
-        Category(
-            id: 3,
-            title: 'Laboratories',
-            imageUrl:
-            'https://via.placeholder.com/50/DC3545/FFFFFF?Text=Labs'),
-      ];
-    }
-    final url = Uri.parse('$baseUrl/api/categories');
-    try {
-      final response = await _httpClient.get(
-        url,
-        headers: {'Authorization': 'Bearer $token'},
-      );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return data
-            .map((json) => Category.fromJson(json as Map<String, dynamic>))
-            .toList();
-      } else {
-        throw Exception('Failed to fetch categories: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error fetching categories: $e');
-      return [
-        Category(
-            id: 1,
-            title: 'Doctors',
-            imageUrl:
-            'https://via.placeholder.com/50/007BFF/FFFFFF?Text=Doctors'),
-        Category(
-            id: 2,
-            title: 'Pharmacies',
-            imageUrl:
-            'https://via.placeholder.com/50/28A745/FFFFFF?Text=Pharmacies'),
-        Category(
-            id: 3,
-            title: 'Laboratories',
-            imageUrl:
-            'https://via.placeholder.com/50/DC3545/FFFFFF?Text=Labs'),
-      ];
     }
   }
 
@@ -240,6 +291,35 @@ class ApiService extends GetxService {
     }
   }
 
+  Future<Map<String, dynamic>> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    final String? token = await getToken();
+    if (token == null) {
+      throw Exception('User not authenticated');
+    }
+    final url = Uri.parse('$baseUrl/change-password');
+    final response = await _httpClient.post(url, headers: {
+      'Authorization': 'Bearer $token'
+    }, body: {
+      'oldPassword': oldPassword,
+      'newPassword': newPassword,
+    });
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      return {
+        'success': true,
+        'message': data['message'] ?? 'Password changed successfully',
+      };
+    } else {
+      final Map<String, dynamic> errorData = json.decode(response.body);
+      throw Exception(
+          'Failed to change password: ${response.statusCode}, ${errorData['message']}');
+    }
+  }
+
   Future<void> updateUserProfile(String token, Profile profile) async {
     if (token == null) {
       throw Exception('User not authenticated');
@@ -260,6 +340,7 @@ class ApiService extends GetxService {
     }
   }
 
+  // Signup Service
   Future<Map<String, dynamic>> signUp(SignupUserModel user) async {
     if (user.bloodTestImage == null || user.idImage == null) {
       return {
@@ -323,6 +404,65 @@ class ApiService extends GetxService {
     }
   }
 
+  // Data Fetching Services
+  Future<List<Category>> getCategories() async {
+    final String? token = await getToken();
+    if (token == null) {
+      return [
+        Category(
+            id: 1,
+            title: 'Doctors',
+            imageUrl:
+            'https://via.placeholder.com/50/007BFF/FFFFFF?Text=Doctors'),
+        Category(
+            id: 2,
+            title: 'Pharmacies',
+            imageUrl:
+            'https://via.placeholder.com/50/28A745/FFFFFF?Text=Pharmacies'),
+        Category(
+            id: 3,
+            title: 'Laboratories',
+            imageUrl:
+            'https://via.placeholder.com/50/DC3545/FFFFFF?Text=Labs'),
+      ];
+    }
+    final url = Uri.parse('$baseUrl/api/categories');
+    try {
+      final response = await _httpClient.get(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data
+            .map((json) => Category.fromJson(json as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception('Failed to fetch categories: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching categories: $e');
+      return [
+        Category(
+            id: 1,
+            title: 'Doctors',
+            imageUrl:
+            'https://via.placeholder.com/50/007BFF/FFFFFF?Text=Doctors'),
+        Category(
+            id: 2,
+            title: 'Pharmacies',
+            imageUrl:
+            'https://via.placeholder.com/50/28A745/FFFFFF?Text=Pharmacies'),
+        Category(
+            id: 3,
+            title: 'Laboratories',
+            imageUrl:
+            'https://via.placeholder.com/50/DC3545/FFFFFF?Text=Labs'),
+      ];
+    }
+  }
+
   Future<List<Medication>> getCurrentMedications() async {
     final String? token = await getToken();
     if (token == null) {
@@ -339,7 +479,7 @@ class ApiService extends GetxService {
         final List<dynamic> data = json.decode(response.body);
         return data.map((json) => Medication.fromJson(json as Map<String, dynamic>)).toList();
       } else {
-        print('API Error: ${response.statusCode}');
+        print('API Error (Current Medications): ${response.statusCode}');
         return _getFakeMedications(); // Return fake data on API error
       }
     } catch (e) {
@@ -405,6 +545,50 @@ class ApiService extends GetxService {
       Prescription(id: 3, doctorName: 'Dr. Robert Jones', doctorSpeciality: 'Neurologist', validUntil: '01/6/2025'),
       Prescription(id: 4, doctorName: 'Dr. Emily White', doctorSpeciality: 'Pediatrician', validUntil: '10/5/2025'),
       Prescription(id: 5, doctorName: 'Dr. David Brown', doctorSpeciality: 'Orthopedist', validUntil: '28/5/2025'),
+    ];
+  }
+
+  Future<List<dynamic>> fetchcategoryData(String endpoint) async {
+    final String url = '$baseUrl/$endpoint';
+    try {
+      final response = await _httpClient.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print('Failed to fetch data from $endpoint: ${response.statusCode}, ${response.body}');
+        // Return fake data on API error
+        return _getFakeDoctorCategories();
+      }
+    } catch (e) {
+      print('Error fetching data from $endpoint: $e');
+      // Return fake data on exception
+      return _getFakeDoctorCategories();
+    }
+  }
+
+// Method to generate fake doctor category data
+  List<dynamic> _getFakeDoctorCategories() {
+    return [
+      {
+        'd_id': 101,
+        'name': 'Cardiologists',
+        'icon': 'heart',
+      },
+      {
+        'd_id': 102,
+        'name': 'Dermatologists',
+        'icon': 'face',
+      },
+      {
+        'd_id': 103,
+        'name': 'Pediatricians',
+        'icon': 'child',
+      },
+      {
+        'd_id': 104,
+        'name': 'Neurologists',
+        'icon': 'brain',
+      },
     ];
   }
 

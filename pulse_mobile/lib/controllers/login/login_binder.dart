@@ -1,16 +1,11 @@
 import 'package:get/get.dart';
-
-import '../../services/auth.dart';
-
-import '../../services/connections.dart';
-
+import '../../services/connections.dart'; // Import the merged ApiService
 import 'login_controller.dart';
 
 class LoginBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => AuthService());
-    Get.lazyPut(() => ApiService()); // Make sure ApiService is registered
-    Get.lazyPut(() => LoginController(Get.find<AuthService>(), Get.find<ApiService>()));
+    Get.lazyPut(() => ApiService()); // Register the merged ApiService
+    Get.lazyPut(() => LoginController(Get.find<ApiService>())); // LoginController now depends only on ApiService
   }
 }

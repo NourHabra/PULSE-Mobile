@@ -14,8 +14,9 @@ dependencies:
   flutter_feather_icons: ^2.0.0+1
   flutter_secure_storage: ^9.2.4
   cached_network_image: ^3.2.1
-  flutter_svg: ^1.1.6
+  flutter_svg: ^2.1.0
   image_picker: ^1.1.2
+  string_2_icon: ^0.0.2
 
 dev_dependencies:
   flutter_test:

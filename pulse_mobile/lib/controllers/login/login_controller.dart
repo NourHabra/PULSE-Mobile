@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pulse_mobile/services/auth.dart';
-import 'package:pulse_mobile/services/connections.dart'; // Import ApiService
+import 'package:pulse_mobile/services/connections.dart'; // Import the merged ApiService
 
 class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();
@@ -9,28 +8,25 @@ class LoginController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool isPasswordVisible = false.obs;
 
-  final AuthService authService;
   final ApiService apiService; // Get ApiService Instance
 
-  LoginController(this.authService, this.apiService); // Updated constructor
+  LoginController(this.apiService); // Updated constructor
 
   @override
   void onInit() {
     super.onInit();
-// No need to check login status here anymore. That logic should be
-// in a Splash/Initial controller or similar.
+    // No need to check login status here anymore.
   }
-
+/*
+*  "email": "walid.busi24@gmail.com",
+  "password": "healthy123"*/
   bool isValidEmail(String email) {
     final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     return emailRegex.hasMatch(email);
   }
 
   bool isValidPassword(String password) {
-    if (password.length < 10) {
-      return false;
-    }
-    return true;
+    return password.length >= 10 && password.contains(RegExp(r'[0-9]')); // Added number check
   }
 
   Future<void> login() async {
@@ -40,7 +36,7 @@ class LoginController extends GetxController {
     if (!isValidEmail(email)) {
       Get.snackbar(
         'Error',
-        'Gotta enter a valid email address.',
+        'Please enter a valid email address.',
         snackPosition: SnackPosition.BOTTOM,
       );
       return;
@@ -49,7 +45,7 @@ class LoginController extends GetxController {
     if (!isValidPassword(password)) {
       Get.snackbar(
         'Error',
-        'Password needs to be 10 characters with at least one number .',
+        'Password needs to be at least 10 characters long and contain at least one number.',
         snackPosition: SnackPosition.BOTTOM,
       );
       return;
@@ -57,27 +53,29 @@ class LoginController extends GetxController {
 
     isLoading.value = true;
     try {
-      final bool? authToken = await authService.login(email, password); // Change to bool?
-      if (authToken == true) { // Check the boolean value directly
-        isLoading.value = false;
-        Get.offAllNamed('/home');
-        print(authToken);
+      final bool isLoggedIn = await apiService.login(email, password);
+      isLoading.value = false;
+      print('ApiService.login() returned: $isLoggedIn'); // Add this line
+      if (isLoggedIn) {
+        Get.offAllNamed('/home1');
+        print('Login successful, navigating to /home1');
       } else {
-        isLoading.value = false;
         Get.snackbar(
           'Error',
           'Login failed. Wrong credentials maybe?',
           snackPosition: SnackPosition.BOTTOM,
         );
-        print(authToken);
+        print('Login failed');
       }
     } catch (e) {
       isLoading.value = false;
+      print('Error type in controller: ${e.runtimeType}');
       Get.snackbar(
         'Error',
-        'Something went wrong during login ',
+        'Something went wrong during login in the controller: $e',
         snackPosition: SnackPosition.BOTTOM,
       );
+      print('Error during login in controller: $e');
     }
   }
 
@@ -103,9 +101,8 @@ class LoginController extends GetxController {
     print('Signing in with Apple');
   }
 
-// logout (moved to ApiService)
   Future<void> logout() async {
-    await apiService.deleteToken(); // Use the ApiService to delete.
+    await apiService.deleteToken();
     Get.offAllNamed('/login');
   }
 

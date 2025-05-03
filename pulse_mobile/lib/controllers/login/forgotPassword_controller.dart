@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../services/auth.dart';
+import '../../services/connections.dart'; // Import the merged ApiService
 
 class ForgotPasswordController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final RxBool isLoading = false.obs;
-  final AuthService authService;
+  final ApiService apiService; // Use ApiService
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   RxBool isEmail = true.obs;
 
-  ForgotPasswordController({required this.authService});
+  ForgotPasswordController({required this.apiService}); // Update the constructor
 
   Future<void> resetPassword() async {
     final input = emailController.text.trim();
@@ -23,7 +23,7 @@ class ForgotPasswordController extends GetxController {
       }
       isLoading.value = true;
       try {
-        await authService.resetPasswordByEmail(input);
+        await apiService.resetPasswordByEmail(input); // Use apiService
         // Navigate to verification screen after successful email request
         Get.toNamed(
           '/verification',
@@ -44,7 +44,7 @@ class ForgotPasswordController extends GetxController {
       }
       isLoading.value = true;
       try {
-        await authService.resetPasswordByPhone(input);
+        await apiService.resetPasswordByPhone(input); // Use apiService
         // Navigate to verification screen after successful phone request
         Get.toNamed(
           '/verification',
@@ -58,7 +58,7 @@ class ForgotPasswordController extends GetxController {
         return;
       }
     }
-    isLoading.value = false; // Moved here to ensure it's set after the try-catch block
+    isLoading.value = false;
   }
 
   bool isValidEmail(String email) {
