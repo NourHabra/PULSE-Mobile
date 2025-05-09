@@ -17,6 +17,8 @@ dependencies:
   flutter_svg: ^2.1.0
   image_picker: ^1.1.2
   string_2_icon: ^0.0.2
+  webview_flutter: ^4.11.0
+  webview_flutter_android: ^4.4.2
 
 dev_dependencies:
   flutter_test:
@@ -33,3 +35,11 @@ flutter:
     - assets/logo_blue.png
     - assets/Google_Icon.webp
     - assets/Apple-Logo.png
+    - assets/corporate_fare_600dp.png
+    - assets/pill_600dp.png
+    - assets/stethoscope_600dp.png
+    - assets/cardiology_600dp.png
+    - assets/accessibility_600dp.png
+    - assets/child_friendly_600dp.png
+    - assets/neurology_600dp_.png
+    - assets/gastroenterology_600dp.png

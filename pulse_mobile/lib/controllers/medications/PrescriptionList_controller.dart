@@ -1,11 +1,7 @@
-// lib/controllers/prescription_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../models/prescriptionListitemModel.dart';
-import '../../screens/medicalDrug_screens/prescriptionList_screen.dart';
 import '../../services/connections.dart';
-// Import the detail screen
 
 class PrescriptionController extends GetxController {
   final ApiService _apiService = Get.find<ApiService>();

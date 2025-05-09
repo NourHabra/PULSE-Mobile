@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 class VitalCard extends StatelessWidget {
   final Color? color;
   final String? topText;
@@ -19,8 +19,8 @@ class VitalCard extends StatelessWidget {
     this.middleSubText,
     this.bottomText,
     this.icon,
-    this.width = 172,
-    this.height = 155,
+    this.width ,
+    this.height ,
     this.borderRadius = 20,
   });
 
@@ -55,7 +55,7 @@ class VitalCard extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 17,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             const SizedBox(height: 2),
@@ -97,7 +97,7 @@ class VitalCard extends StatelessWidget {
                   bottomText!,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 15,
+                    fontSize: 14,
                   ),
                 ),
               ),

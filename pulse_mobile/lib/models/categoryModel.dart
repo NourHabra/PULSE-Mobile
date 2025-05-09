@@ -1,6 +1,6 @@
 // lib/models/categoryModel.dart
 class Category {
-  final int id; // Add the id
+  final int id;
   final String title;
   final String imageUrl;
 
@@ -8,9 +8,14 @@ class Category {
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
-      id: json['id'] as int? ?? 0, //  handle null
-      title: json['title'] as String? ?? '',
-      imageUrl: json['imageUrl'] as String? ?? '',
+      id: json['id'] as int? ?? 0,
+      title: json['name'] as String? ?? '', // <--- ENSURE THIS IS 'name'
+      imageUrl: json['url'] as String? ?? '',  // <--- ENSURE THIS IS 'url'
     );
+  }
+
+  @override
+  String toString() {
+    return 'Category(id: $id, title: $title, imageUrl: $imageUrl)';
   }
 }

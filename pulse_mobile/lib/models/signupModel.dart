@@ -1,44 +1,52 @@
-import 'dart:io';
-
 class SignupUserModel {
-  String? email;
-  String? password;
   String? firstName;
   String? lastName;
-  String? phoneNumber;
-  String? dateOfBirth;
-  String? placeOfBirth;
+  String? email;
+  String? password;
   double? height;
   double? weight;
-  File? bloodTestImage;
-  File? idImage;
+  String? bloodType;
+  String? fingerprint;
+  String? gender;
+  String? dateOfBirth;
+  String? placeOfBirth;
+  String? mobileNumber;
+  String? address;
+  String? pictureUrl;
 
   SignupUserModel({
-    this.email,
-    this.password,
     this.firstName,
     this.lastName,
-    this.phoneNumber,
-    this.dateOfBirth,
-    this.placeOfBirth,
+    this.email,
+    this.password,
     this.height,
     this.weight,
-    this.bloodTestImage,
-    this.idImage,
+    this.bloodType,
+    this.fingerprint,
+    this.gender,
+    this.dateOfBirth,
+    this.placeOfBirth,
+    this.mobileNumber,
+    this.address,
+    this.pictureUrl,
   });
 
-  // toJson method to convert the object to a JSON map for sending to the API.  Exclude images.  Corrected to return Map<String, String>
-  Map<String, String> toJson() {
+  Map<String, dynamic> toJson() {
     return {
-      'email': email ?? '', // Handle nulls with a default value
-      'password': password ?? '',
-      'firstName': firstName ?? '',
-      'lastName': lastName ?? '',
-      'mobileNumber': phoneNumber ?? '',
-      'dateOfBirth': dateOfBirth ?? '',
-      'placeOfBirth': placeOfBirth ?? '',
-      'height': height?.toString() ?? '', // Convert double to String
-      'weight': weight?.toString() ?? '', // Convert double to String
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'password': password,
+      'height': height,
+      'weight': weight,
+      'bloodType': bloodType,
+      'fingerprint': fingerprint,
+      'gender': gender,
+      'dateOfBirth': dateOfBirth,
+      'placeOfBirth': placeOfBirth,
+      'mobileNumber': mobileNumber,
+      'address': address,
+      'pictureUrl': pictureUrl,
     };
   }
 }

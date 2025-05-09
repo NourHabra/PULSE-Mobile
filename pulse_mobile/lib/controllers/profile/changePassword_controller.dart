@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../services/connections.dart'; // Import ApiService
 
 class ChangePasswordController extends GetxController {
   // Get the ApiService instance
@@ -19,13 +20,8 @@ class ChangePasswordController extends GetxController {
   final RxBool showNewPassword = false.obs;
   final RxBool showConfirmPassword = false.obs;
 
-  //  method to get the user's token.
-  String? _getUserToken() {
-    //  SharedPreferences,  Secure Storage, or from GetX.
-    //  For example, if you stored it in GetX:
-    // return Get.find<AuthController>().user.value?.authToken; // Adjust as needed.
-    //  (You'd need an AuthController or similar)
-    return "dummy_user_token"; //remove this
+  Future<String?> _getUserToken() {
+    return apiService.getToken();
   }
 
   // Function to handle the password change
@@ -50,7 +46,7 @@ class ChangePasswordController extends GetxController {
     }
 
     //  Get the user's token.
-    String? userToken = _getUserToken();
+    String? userToken = await _getUserToken(); // Await the getToken()
     if (userToken == null) {
       errorMessage.value = 'User token not found. Please log in again.';
       isLoading.value = false;
@@ -59,10 +55,10 @@ class ChangePasswordController extends GetxController {
 
     try {
       // Call the changePassword method from ApiService
-      final response = await apiService.changePassword( // Make sure ApiService.changePassword has userToken
+      final response = await apiService.changePassword(
+        // Make sure ApiService.changePassword has userToken
         oldPassword: oldPasswordController.text,
         newPassword: newPasswordController.text,
-        userToken: userToken, // Pass the userToken here
       );
 
       if (response['success'] == true) {
@@ -91,39 +87,5 @@ class ChangePasswordController extends GetxController {
     newPasswordController.dispose();
     confirmPasswordController.dispose();
     super.onClose();
-  }
-}
-
-// ApiService (Assumed) -  Make sure this matches your actual ApiService class
-class ApiService {
-  // ... other methods
-
-  Future<Map<String, dynamic>> changePassword({
-    required String oldPassword,
-    required String newPassword,
-    required String userToken, // Add userToken parameter here
-  }) async {
-    //  Implement your API call here.  This is just a placeholder.
-    //  Include the userToken in your request headers or body.
-    //  Example:
-    // final response = await post(
-    //   '/api/change-password',
-    //   {
-    //     'old_password': oldPassword,
-    //     'new_password': newPassword,
-    //   },
-    //   headers: {'Authorization': 'Bearer $userToken'}, // Include token
-    // );
-    // if (response.statusCode == 200) {
-    //   return jsonDecode(response.body);
-    // } else {
-    //   throw Exception('Failed to change password');
-    // }
-    await Future.delayed(Duration(seconds: 1)); // Simulate network delay
-    if (oldPassword == "test" && newPassword == "new") {
-      return {'success': true, 'message': 'Password changed successfully!'};
-    } else {
-      return {'success': false, 'message': 'Invalid old password.'};
-    }
   }
 }

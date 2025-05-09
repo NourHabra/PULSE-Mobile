@@ -8,7 +8,6 @@ import '../../widgets/profileMenuOption.dart';
 import '../../widgets/infoCard.dart';
 
 class ProfileScreen1 extends GetView<ProfileController> {
-  // GetX requires you to define the controller.
   @override
   final ProfileController controller = Get.put(ProfileController());
 
@@ -24,16 +23,15 @@ class ProfileScreen1 extends GetView<ProfileController> {
             return const Center(child: CircularProgressIndicator());
           } else if (controller.errorMessage.isNotEmpty) {
             return Center(child: Text(controller.errorMessage.value));
-          } else if (controller.profile.value == null) { // Use controller.profile
+          } else if (controller.profile.value == null) {
             return const Center(child: Text('No profile data available.'));
           } else {
-            final profile = controller.profile.value!; // Get the Profile object
+            final profile = controller.profile.value!;
 
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Gradient Container Start
                   Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -48,14 +46,10 @@ class ProfileScreen1 extends GetView<ProfileController> {
                     padding: const EdgeInsets.only(bottom: 50, top: 90),
                     child: Column(
                       children: [
-                        // Profile Image
-                        _buildProfileImage(profile.pictureUrl), // Use profile.pictureUrl
+                        _buildProfileImage(profile.pictureUrl),
                         const SizedBox(height: 16),
-                        // User Name.  Since Profile doesn't have first/last name,
-                        //  we display a placeholder or empty string.  You might
-                        //  fetch this from another source if available.
                         Text(
-                          'User Name', //  Change this as needed.
+                          '${profile.firstName ?? ''} ${profile.lastName ?? ''}', // Display Name
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -63,14 +57,13 @@ class ProfileScreen1 extends GetView<ProfileController> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        // Blood Type, Weight, Height Section
                         Row(
                           children: [
                             Expanded(
                               child: InfoCard(
                                 context: context,
                                 title: 'Blood Type',
-                                content: profile.bloodType ?? 'N/A', // Use profile.bloodType
+                                content: profile.bloodType ?? 'N/A',
                                 icon: Icons.water_drop,
                               ),
                             ),
@@ -80,7 +73,7 @@ class ProfileScreen1 extends GetView<ProfileController> {
                                 context: context,
                                 title: 'Weight',
                                 content: profile.weight != null
-                                    ? '${profile.weight} kg' // Use profile.weight
+                                    ? '${profile.weight} kg'
                                     : 'N/A',
                                 icon: Icons.fitness_center,
                               ),
@@ -91,7 +84,7 @@ class ProfileScreen1 extends GetView<ProfileController> {
                                 context: context,
                                 title: 'Height',
                                 content: profile.height != null
-                                    ? '${profile.height} cm' // Use profile.height
+                                    ? '${profile.height} cm'
                                     : 'N/A',
                                 icon: Icons.accessibility,
                               ),
@@ -101,87 +94,81 @@ class ProfileScreen1 extends GetView<ProfileController> {
                       ],
                     ),
                   ),
-                  // Gradient Container End
-
-                  // Menu Options
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     transform: Matrix4.translationValues(0, -15, 0),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
-                      borderRadius: const BorderRadius.only(
+                      borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20),
                       ),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(top: 25.0),
-                      child: Column(children: [
-                        MenuOption(
-                          title: 'My Saved',
-                          icon: Icons.favorite_border,
-                          onTap: () {
-                            Get.toNamed('/saved');
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          // Add horizontal padding
-                          child: Divider(
-                              color: AppLightModeColors.textFieldBorder),
-                        ),
-                        MenuOption(
-                          title: 'Edit Profile',
-                          icon: Icons.person_outline,
-                          onTap: () {
-                            Get.toNamed('/editProfile');
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          // Add horizontal padding
-                          child: Divider(
-                              color: AppLightModeColors.textFieldBorder),
-                        ),
-                        MenuOption(
-                          title: 'Settings',
-                          icon: Icons.settings_outlined,
-                          onTap: () {
-                            Get.toNamed('/settings');
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          // Add horizontal padding
-                          child: Divider(
-                              color: AppLightModeColors.textFieldBorder),
-                        ),
-                        MenuOption(
-                          title: 'Medications & Prescriptions',
-                          icon: Icons.medical_services_outlined,
-                          onTap: () {
-                            Get.toNamed('/med&pres');
-
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          // Add horizontal padding
-                          child: Divider(
-                              color: AppLightModeColors.textFieldBorder),
-                        ),
-                        MenuOption(
-                          title: 'Logout',
-                          icon: Icons.logout,
-                          onTap: () {
-                            controller.logout();
-                          },
-                          isRed: true,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                      ]),
+                      child: Column(
+                        children: [
+                          MenuOption(
+                            title: 'My Saved',
+                            icon: Icons.favorite_border,
+                            onTap: () {
+                              Get.toNamed('/saved');
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Divider(
+                                color: AppLightModeColors.textFieldBorder),
+                          ),
+                          MenuOption(
+                            title: 'Edit Profile',
+                            icon: Icons.person_outline,
+                            onTap: () {
+                              Get.toNamed('/editProfile');
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: Divider(
+                                color: AppLightModeColors.textFieldBorder),
+                          ),
+                          MenuOption(
+                            title: 'Settings',
+                            icon: Icons.settings_outlined,
+                            onTap: () {
+                              Get.toNamed('/settings');
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Divider(
+                                color: AppLightModeColors.textFieldBorder),
+                          ),
+                          MenuOption(
+                            title: 'Medications & Prescriptions',
+                            icon: Icons.medical_services_outlined,
+                            onTap: () {
+                              Get.toNamed('/med&pres');
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Divider(
+                                color: AppLightModeColors.textFieldBorder),
+                          ),
+                          MenuOption(
+                            title: 'Logout',
+                            icon: Icons.logout,
+                            onTap: () {
+                              controller.logout();
+                            },
+                            isRed: true,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -227,4 +214,3 @@ class ProfileScreen1 extends GetView<ProfileController> {
     );
   }
 }
-

@@ -4,7 +4,7 @@ import 'package:pulse_mobile/widgets/appbar.dart';
 import '../../controllers/profile/mySavedProfile_controller.dart';
 import '../../models/categoryModel.dart';
 import '../../widgets/bottombar.dart';
-import '../../widgets/mysavedCategory.dart';
+import '../../widgets/rectangular_category_item.dart'; // Import the new widget
 
 class MySavedPage extends StatelessWidget {
   final MySavedController controller = Get.put(MySavedController());
@@ -24,23 +24,26 @@ class MySavedPage extends StatelessWidget {
           return const Center(child: Text('No categories available.'));
         } else {
           return Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: controller.categories.map((Category category) {
-                return CategoryList(
-                  category: category,
-                  onTap: () {
-                    final savedItemIds =
-                    controller.getSavedItemIds(category.title);
-                    // Pass the category ID
-                    _navigateToCategoryDetail(
-                      context,
-                      category.id,  // Pass the category ID
-                      category.title,
-                      savedItemIds,
-                    );
-                  },
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: RectangularCategoryItem( // Use RectangularCategoryItem here
+                    category: category,
+                    onTap: () {
+                      final savedItemIds =
+                      controller.getSavedItemIds(category.title);
+                      // Pass the category ID
+                      _navigateToCategoryDetail(
+                        context,
+                        category.id, // Pass the category ID
+                        category.title,
+                        savedItemIds,
+                      );
+                    },
+                  ),
                 );
               }).toList(),
             ),

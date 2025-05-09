@@ -107,7 +107,7 @@ class SignUpPage2 extends GetView<SignUpController> {
                 child: ElevatedButton(
                   onPressed: controller.isLoading.value || !controller.isTermsAgreed.value
                       ? null
-                      : controller.goToNextPage,
+                      : controller.completeSignup, // Changed to completeSignup method
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppLightModeColors.mainColor,
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -118,7 +118,7 @@ class SignUpPage2 extends GetView<SignUpController> {
                   child: controller.isLoading.value
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
-                    'Continue',
+                    'Sign Up', // Changed button text to 'Sign Up'
                     style:
                     TextStyle(color: Colors.white, fontSize: 18),
                   ),

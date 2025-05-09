@@ -1,4 +1,4 @@
-import 'dart:io';
+/*import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -136,7 +136,7 @@ class SignUpPage3 extends GetView<SignUpController> {
               child: ElevatedButton(
                 onPressed: controller.isLoading.value || controller.idImage.value == null || controller.bloodTestImage.value == null
                     ? null
-                    : controller.signUp,
+                    : controller.completeSignup, // Corrected method name
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppLightModeColors.mainColor,
                   padding: const EdgeInsets.symmetric(vertical: 16.0,horizontal: 20),
@@ -158,4 +158,4 @@ class SignUpPage3 extends GetView<SignUpController> {
       ),
     );
   }
-}
+}*/

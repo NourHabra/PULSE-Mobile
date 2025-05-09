@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../models/signupModel.dart';
 import '../../services/connections.dart';
 
@@ -9,7 +7,7 @@ class SignUpController extends GetxController {
   // --- Text Editing Controllers ---
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController(); // Add confirm password controller
+  final confirmPasswordController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final phoneNumberController = TextEditingController();
@@ -17,25 +15,30 @@ class SignUpController extends GetxController {
   final placeOfBirthController = TextEditingController();
   final heightController = TextEditingController();
   final weightController = TextEditingController();
+  final bloodTypeController = TextEditingController();
+  final fingerprintController = TextEditingController();
+  final genderController = TextEditingController();
+  final addressController = TextEditingController();
+  final pictureUrlController = TextEditingController();
 
   // --- Reactive Variables ---
   final isLoading = false.obs;
   final errorMessage = RxString('');
   final user = SignupUserModel();
   final selectedDate = Rx<DateTime?>(null);
-  final bloodTestImage = Rx<File?>(null);
-  final idImage = Rx<File?>(null);
+  // Removed bloodTestImage and idImage
+  // final bloodTestImage = Rx<File?>(null);
+  // final idImage = Rx<File?>(null);
 
   // --- Navigation ---
   final currentPage = 1.obs;
-  final isPasswordVisible = false.obs; // Add this
-  final isTermsAgreed = false.obs; // ADD THIS LINE
+  final isPasswordVisible = false.obs;
+  final isTermsAgreed = false.obs;
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  // ADD THIS METHOD
   void setTermsAgreed(bool? value) {
     isTermsAgreed.value = value ?? false;
   }
@@ -79,46 +82,13 @@ class SignUpController extends GetxController {
       }
 
       user.email = emailController.text.trim();
-      user.password = passwordController.text.trim(); // Only set password if it matches
+      user.password = passwordController.text.trim();
       errorMessage.value = '';
       currentPage.value = 2;
       print('Navigating to page 2');
       Get.toNamed('/signup2');
-    } else if (currentPage.value == 2) {
-      user.firstName = firstNameController.text.trim();
-      user.lastName = lastNameController.text.trim();
-      user.phoneNumber = phoneNumberController.text.trim();
-      user.dateOfBirth = selectedDate.value?.toIso8601String();
-      user.placeOfBirth = placeOfBirthController.text.trim();
-
-      if (firstNameController.text.isEmpty ||
-          lastNameController.text.isEmpty ||
-          phoneNumberController.text.isEmpty ||
-          selectedDate.value == null ||
-          placeOfBirthController.text.isEmpty ||
-          heightController.text.isEmpty || // Check if the field is empty before parsing
-          weightController.text.isEmpty) { // Check if the field is empty before parsing
-        errorMessage.value = 'All fields are required.';
-        return;
-      }
-
-      try {
-        user.height = double.parse(heightController.text.trim());
-      } catch (e) {
-        errorMessage.value = 'Invalid height format. Please use a number.';
-        return;
-      }
-      try {
-        user.weight = double.parse(weightController.text.trim());
-      } catch (e) {
-        errorMessage.value = 'Invalid weight format. Please use a number.';
-        return;
-      }
-
-      errorMessage.value = '';
-      currentPage.value = 3;
-      Get.toNamed('/signup3');
     }
+    // The logic for currentPage.value == 2 is now moved to completeSignup
   }
 
   void goToPreviousPage() {
@@ -148,30 +118,71 @@ class SignUpController extends GetxController {
     }
   }
 
-  Future<void> pickImage(ImageSource source, bool isBloodTest) async {
-    try {
-      final pickedFile = await ImagePicker().pickImage(source: source);
-      if (pickedFile != null) {
-        final imageFile = File(pickedFile.path);
-        if (isBloodTest) {
-          bloodTestImage.value = imageFile;
-          user.bloodTestImage = imageFile;
-        } else {
-          idImage.value = imageFile;
-          user.idImage = imageFile;
-        }
-      } else {
-        print('No image selected.');
-      }
-    } catch (e) {
-      errorMessage.value = 'Error picking image: $e';
-      print('Error picking image: $e');
-    }
-  }
+  // Removed pickImage function
+  // Future<void> pickImage(ImageSource source, bool isBloodTest) async {
+  //   try {
+  //     final pickedFile = await ImagePicker().pickImage(source: source);
+  //     if (pickedFile != null) {
+  //       final imageFile = File(pickedFile.path);
+  //       if (isBloodTest) {
+  //         bloodTestImage.value = imageFile;
+  //         user.bloodTestImage = imageFile;
+  //       } else {
+  //         idImage.value = imageFile;
+  //         user.idImage = imageFile;
+  //       }
+  //     } else {
+  //       print('No image selected.');
+  //     }
+  //   } catch (e) {
+  //     errorMessage.value = 'Error picking image: $e';
+  //     print('Error picking image: $e');
+  //   }
+  // }
 
-  Future<void> signUp() async {
+  Future<void> completeSignup() async {
     isLoading.value = true;
     errorMessage.value = '';
+
+    user.firstName = firstNameController.text.trim();
+    user.lastName = lastNameController.text.trim();
+    user.mobileNumber = phoneNumberController.text.trim();
+    user.dateOfBirth = selectedDate.value?.toIso8601String();
+    user.placeOfBirth = placeOfBirthController.text.trim();
+    user.height = double.tryParse(heightController.text.trim());
+    user.weight = double.tryParse(weightController.text.trim());
+    user.bloodType = bloodTypeController.text.trim();
+    user.fingerprint = fingerprintController.text.trim();
+    user.gender = genderController.text.trim();
+    user.address = addressController.text.trim();
+    user.pictureUrl = pictureUrlController.text.trim();
+
+    if (firstNameController.text.isEmpty ||
+        lastNameController.text.isEmpty ||
+        phoneNumberController.text.isEmpty ||
+        selectedDate.value == null ||
+        placeOfBirthController.text.isEmpty ||
+        heightController.text.isEmpty ||
+        weightController.text.isEmpty ||
+        bloodTypeController.text.isEmpty ||
+        fingerprintController.text.isEmpty ||
+        genderController.text.isEmpty ||
+        addressController.text.isEmpty) {
+      errorMessage.value = 'All fields are required.';
+      isLoading.value = false;
+      return;
+    }
+
+    if (user.height == null) {
+      errorMessage.value = 'Invalid height format. Please use a number.';
+      isLoading.value = false;
+      return;
+    }
+    if (user.weight == null) {
+      errorMessage.value = 'Invalid weight format. Please use a number.';
+      isLoading.value = false;
+      return;
+    }
 
     if (passwordController.text != confirmPasswordController.text) {
       errorMessage.value = 'Passwords do not match.';
@@ -179,22 +190,16 @@ class SignUpController extends GetxController {
       return;
     }
 
-    if (user.bloodTestImage == null || user.idImage == null) {
-      errorMessage.value = 'Please upload both images.';
-      isLoading.value = false;
-      return;
-    }
-
     final response = await apiService.signUp(user); // Call the signUp method
 
-    isLoading.value = false; //  Set this *inside* the finally block
+    isLoading.value = false;
     if (response['success']) {
       Get.snackbar('Success', response['message'],
           snackPosition: SnackPosition.BOTTOM);
       Get.offAllNamed('/login');
     } else {
       errorMessage.value = response['message'];
-      print('Signup failed: ${response['error']}'); // Log the error
+      print('Signup failed: ${response['error']}');
     }
   }
 
@@ -202,7 +207,7 @@ class SignUpController extends GetxController {
   void onClose() {
     emailController.dispose();
     passwordController.dispose();
-    confirmPasswordController.dispose(); // Dispose the confirm password controller
+    confirmPasswordController.dispose();
     firstNameController.dispose();
     lastNameController.dispose();
     phoneNumberController.dispose();
@@ -210,6 +215,11 @@ class SignUpController extends GetxController {
     placeOfBirthController.dispose();
     heightController.dispose();
     weightController.dispose();
+    bloodTypeController.dispose();
+    fingerprintController.dispose();
+    genderController.dispose();
+    addressController.dispose();
+    pictureUrlController.dispose();
     super.onClose();
   }
 }
