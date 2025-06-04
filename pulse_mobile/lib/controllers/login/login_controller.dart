@@ -8,17 +8,17 @@ class LoginController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxBool isPasswordVisible = false.obs;
 
-  final ApiService apiService; // Get ApiService Instance
+  final ApiService apiService;
 
-  LoginController(this.apiService); // Updated constructor
+  LoginController(this.apiService);
 
   @override
   void onInit() {
     super.onInit();
-    // No need to check login status here anymore.
+
   }
 /*
-*  "email": "walid.busi24@gmail.com",
+*  "email": "walid.busi2444@gmail.com",
   "password": "healthy123"*/
   bool isValidEmail(String email) {
     final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
@@ -26,7 +26,7 @@ class LoginController extends GetxController {
   }
 
   bool isValidPassword(String password) {
-    return password.length >= 10 && password.contains(RegExp(r'[0-9]')); // Added number check
+    return password.length >= 10 && password.contains(RegExp(r'[0-9]')); // number check
   }
 
   Future<void> login() async {
@@ -84,8 +84,9 @@ class LoginController extends GetxController {
   }
 
   void goToSignUp() {
-    Get.toNamed('/sigup');
+    Get.toNamed('/signup1');
     print('Navigating to Sign Up');
+
   }
 
   void forgotPassword() {

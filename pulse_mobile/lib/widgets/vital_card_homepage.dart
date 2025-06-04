@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 class VitalCard extends StatelessWidget {
   final Color? color;
   final String? topText;
@@ -45,7 +44,7 @@ class VitalCard extends StatelessWidget {
                 child: Icon(
                   icon,
                   color: Colors.white,
-                  size: 35,
+                  size: 38,
                 ),
               ),
             const SizedBox(height: 8),
@@ -54,7 +53,7 @@ class VitalCard extends StatelessWidget {
                 topText!,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 17,
+                  fontSize: 18,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -70,7 +69,7 @@ class VitalCard extends StatelessWidget {
                         middleMainText!,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 28,
+                          fontSize: 30,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -92,7 +91,7 @@ class VitalCard extends StatelessWidget {
 
             if (bottomText != null)
               Transform.translate(
-                offset: const Offset(0, -5),
+                offset: const Offset(0, -1),
                 child: Text(
                   bottomText!,
                   style: const TextStyle(

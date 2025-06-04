@@ -29,16 +29,17 @@ class CurrentMedicationsScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final medication = _controller.medications[index];
                   return Currentmedication(
-                    tradeName: medication.tradeName,
-                    pharmaComposition: medication.pharmaComposition,
-                    numOfTimes: medication.numOfTimes,
-                    untilDate: medication.untilDate,
+                    // Pass the correct fields from the updated Medication model
+                    name: medication.name, // Changed from tradeName to name
+                    activeSubstance: medication.activeSubstance, // Changed from pharmaComposition
+                    dosage: medication.dosage, // New field for dosage
+                    duration: medication.duration, // New field for duration
+                    prescribedDate: medication.prescribedDate, // Changed from untilDate to prescribedDate
                   );
                 },
               );
             }
           },
-
         ),
       ),
       bottomNavigationBar: CustomBottomNavBar(),

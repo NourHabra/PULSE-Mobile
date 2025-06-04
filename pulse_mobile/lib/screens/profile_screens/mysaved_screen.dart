@@ -30,15 +30,15 @@ class MySavedPage extends StatelessWidget {
               children: controller.categories.map((Category category) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
-                  child: RectangularCategoryItem( // Use RectangularCategoryItem here
+                  child: RectangularCategoryItem(
                     category: category,
                     onTap: () {
                       final savedItemIds =
                       controller.getSavedItemIds(category.title);
-                      // Pass the category ID
+
                       _navigateToCategoryDetail(
                         context,
-                        category.id, // Pass the category ID
+                        category.id,
                         category.title,
                         savedItemIds,
                       );
@@ -56,30 +56,16 @@ class MySavedPage extends StatelessWidget {
 
   void _navigateToCategoryDetail(
       BuildContext context,
-      int categoryId, // Receive the category ID
+      int categoryId,
       String categoryName,
       List<String> savedItemIds,
       ) {
-    String routeName = '';
-    switch (categoryName) {
-      case 'Doctors':
-        routeName = '/savedDoctors';
-        break;
-      case 'Pharmacies':
-        routeName = '/savedPharmacies';
-        break;
-      case 'Laboratories':
-        routeName = '/savedLabs';
-        break;
-      default:
-        routeName = '/unknown';
-    }
-
     Get.toNamed(
-      routeName,
+      '/savedDetails', // Use the correct route name
       arguments: {
-        'categoryId': categoryId, // Pass the ID
+        'categoryId': categoryId,
         'savedItemIds': savedItemIds,
+        'categoryName': categoryName, // Pass categoryName here
       },
     );
   }

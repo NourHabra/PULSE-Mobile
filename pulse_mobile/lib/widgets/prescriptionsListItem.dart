@@ -1,23 +1,22 @@
 // lib/widgets/prescriptions_list_item_widget.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:pulse_mobile/theme/app_light_mode_colors.dart'; // Import your color
+import 'package:pulse_mobile/theme/app_light_mode_colors.dart';
 import 'package:get/get.dart';
 
 import '../controllers/medications/PrescriptionList_controller.dart';
 
-
 class Prescriptionslistitem extends StatelessWidget {
   final String name;
   final String speciality;
-  final String untilDate;
+  final String notes; // Changed from untilDate
   final int prescriptionId;
 
   const Prescriptionslistitem({
     super.key,
     required this.name,
     required this.speciality,
-    required this.untilDate,
+    required this.notes, // Changed from untilDate
     required this.prescriptionId,
   });
 
@@ -34,17 +33,17 @@ class Prescriptionslistitem extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color: AppLightModeColors.textFieldBorder, // Use your border color
+              color: AppLightModeColors.textFieldBorder,
               width: 1.5,
             ),
-            borderRadius: BorderRadius.circular(8.0), // Add border radius for a nice look
+            borderRadius: BorderRadius.circular(8.0),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 18), // Add padding
+          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 18),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space them out
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // Align texts to the left
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     name,
@@ -62,18 +61,17 @@ class Prescriptionslistitem extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  Row( // Use a Row to combine "Until: " and untilDate
+                  Row(
                     children: [
                       const Text(
-                        "Until ",
+                        "Notes: ", // Changed text
                         style: TextStyle(
                           fontSize: 15,
                           color: AppLightModeColors.blueText,
-                          // You might want it bold
                         ),
                       ),
                       Text(
-                        untilDate,
+                        notes, // Changed from untilDate
                         style: const TextStyle(
                           fontSize: 15,
                           color: AppLightModeColors.blueText,
@@ -83,10 +81,11 @@ class Prescriptionslistitem extends StatelessWidget {
                   ),
                 ],
               ),
-              const Icon(  // Use an arrow icon here
-                FeatherIcons.chevronRight, // You can change to a different arrow if you like
-                color: AppLightModeColors.blueText, // Use your color
-                size: 24, // Adjust size as needed
+              const Icon(
+
+                FeatherIcons.chevronRight,
+                color: AppLightModeColors.blueText,
+                size: 24,
               ),
             ],
           ),

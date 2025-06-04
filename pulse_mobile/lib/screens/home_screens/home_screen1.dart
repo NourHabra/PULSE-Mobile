@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
-import 'package:pulse_mobile/widgets/appbar.dart';
 import 'package:pulse_mobile/widgets/bottombar.dart';
 import 'package:pulse_mobile/widgets/homeAppBar.dart';
 import 'package:pulse_mobile/widgets/square_category_item.dart';
-import 'package:string_2_icon/string_2_icon.dart';
 import '../../controllers/home1_controller.dart';
 import 'package:pulse_mobile/widgets/vital_card_homepage.dart';
-import '../../models/categoryModel.dart';
-import '../../theme/app_light_mode_colors.dart';
-import '../../widgets/Emergncy_button_homepage.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
+import '../../widgets/Emergncy_button_homepage.dart'; // Assuming this is your EmergencyButton widget
 import '../../widgets/circular_doctor_widget_homepage.dart';
 import '../doctor_screens/first_doctor_screen.dart';
-import '../lab_screens/first_lab_screen.dart'; // Import the FeaturedDoctor model
+import '../emergencyEvents_screens/emergencyEvent_screen.dart';
+import '../lab_screens/first_lab_screen.dart';
 
 class HomeScreen1 extends StatelessWidget {
   const HomeScreen1({super.key});
@@ -26,39 +23,45 @@ class HomeScreen1 extends StatelessWidget {
     return Scaffold(
       appBar: const HomeAppBar(titleText: 'Home'),
       bottomNavigationBar: CustomBottomNavBar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0,horizontal: 25),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildMainCategoryList(controller),
-              const SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 22.0),
-                child: _buildVitalsSection(controller),
+      body: Column( // Changed SingleChildScrollView's child to Column
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded( // Wrap the scrollable content in an Expanded widget
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 25), // Padding for the scrollable content
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildMainCategoryList(controller),
+                  const SizedBox(height: 15),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0), // Keep this if section itself has internal padding
+                    child: _buildVitalsSection(controller),
+                  ),
+                  SizedBox(height: 25,),
+                  EmergencyButton(
+                    onPressed:() {
+                      Get.toNamed('/emergency_events');
+                      print('hi events');
+                    },
+
+                    text: 'View Personal Emergency Events', // Ensure text is passed if your widget requires it
+                  ),
+                  const SizedBox(height: 25),
+                  _buildFeaturedDoctorsList(controller), // Add the featured doctors list
+                ],
               ),
-              const SizedBox(height: 30),
-              _buildEmergencyButton(),
-              const SizedBox(height: 20), // Add some space below the emergency button
-              _buildFeaturedDoctorsList(controller), // Add the featured doctors list
-            ],
+            ),
           ),
-        ),
+          // --- Emergency Button Section (outside the main padding) ---
+
+          // --- End Emergency Button Section ---
+        ],
       ),
     );
   }
 
-  Widget _buildEmergencyButton() {
-    return EmergencyButton(
-      text: 'Request Emergency Medical Services',
-      onPressed: () {
-        print('Request Emergency Medical Services button pressed!');
-      },
-      icon: Icons.local_shipping,
-    );
-  }
-
+  // ... (rest of your build methods remain unchanged)
   Widget _buildFeaturedDoctorsList(HomeController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,9 +74,9 @@ class HomeScreen1 extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 10),
         SizedBox(
-          height: 160, // Adjust the height as needed
+          height: 170,
           child: Obx(() {
             if (controller.loadingFeaturedDoctors.isTrue) {
               return const Center(child: CircularProgressIndicator());
@@ -105,8 +108,7 @@ class HomeScreen1 extends StatelessWidget {
                       name: doctor.fullName,
                       radius: 40.0,
                       onTap: () {
-
-
+                        // Handle tap on doctor widget
                       },
                     ),
                   );
@@ -148,15 +150,16 @@ class HomeScreen1 extends StatelessWidget {
                 final category = controller.mainCategories[index];
                 return Center(
                   child: SizedBox(
-                    width: 120,
+                    width: 131,
                     child: SquareCategoryItem(
                       data: category,
                       onTap: () {
                         if (category.title.toLowerCase() == 'doctors') {
-                          Get.to(() =>  FirstDoctorScreen());
-                        } else if (category.title.toLowerCase() == 'labs') {
+                          Get.to(() => FirstDoctorScreen());
+                        } else if (category.title.toLowerCase() == 'laboratories') {
                           Get.to(() => FirstLabScreen());
-                        }                    },
+                        }
+                      },
                       imageKey: 'url',
                       title: category.title,
                     ),
@@ -174,7 +177,7 @@ class HomeScreen1 extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 10),
+        const SizedBox(height: 30),
         Obx(() {
           if (controller.loadingVitals.isTrue) {
             return const Center(child: CircularProgressIndicator());
@@ -195,7 +198,8 @@ class HomeScreen1 extends StatelessWidget {
           } else {
             return LayoutBuilder(
               builder: (context, constraints) {
-                final cardWidth = (constraints.maxWidth - 10) / 2; // Adjust spacing as needed
+                final cardWidth = (constraints.maxWidth - 9) / 2;
+                // Adjust spacing as needed
                 return Wrap(
                   spacing: 9,
                   runSpacing: 9,
@@ -208,14 +212,10 @@ class HomeScreen1 extends StatelessWidget {
                       timeAgo = 'Updated ${difference.inMinutes} min ago';
                     } else if (difference.inHours < 24) {
                       timeAgo =
-                      'Updated ${difference.inHours} hour${difference.inHours == 1
-                          ? ''
-                          : 's'} ago';
+                      'Updated ${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} ago';
                     } else if (difference.inDays < 7) {
                       timeAgo =
-                      'Updated ${difference.inDays} day${difference.inDays == 1
-                          ? ''
-                          : 's'} ago';
+                      'Updated ${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago';
                     } else if (difference.inDays < 30) {
                       final weeks = (difference.inDays / 7).floor();
                       timeAgo = 'Updated ${weeks} week${weeks == 1 ? '' : 's'} ago';
@@ -231,7 +231,7 @@ class HomeScreen1 extends StatelessWidget {
 
                     return SizedBox(
                       width: cardWidth,
-                      height: Get.width / 2.8, // Keep the height consistent
+                      height: Get.width / 2.6, // Keep the height consistent
                       child: VitalCard(
                         color: controller.getVitalCardColor(vital.name),
                         topText: vital.name,
@@ -244,10 +244,11 @@ class HomeScreen1 extends StatelessWidget {
                   }).toList(),
                 );
               },
+
             );
           }
         }),
       ],
     );
   }
-  }
+}

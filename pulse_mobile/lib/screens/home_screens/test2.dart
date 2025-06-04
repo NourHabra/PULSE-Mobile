@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+/*import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webview_flutter_android/webview_flutter_android.dart'; // Import for Android
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
 class GoogleMapsEmbed extends StatefulWidget {
@@ -23,40 +21,39 @@ class _GoogleMapsEmbedState extends State<GoogleMapsEmbed> {
     super.initState();
 
     PlatformWebViewControllerCreationParams params =
-        const PlatformWebViewControllerCreationParams();
+    const PlatformWebViewControllerCreationParams();
     _controller =
-        WebViewController.fromPlatformCreationParams(params)
-          ..setJavaScriptMode(JavaScriptMode.unrestricted)
-          ..setNavigationDelegate(
-            NavigationDelegate(
-              onPageStarted: (String url) {
-                setState(() {
-                  _isLoading = true;
-                  _loadError = ''; // Clear any previous error
-                });
-                print('Page started loading: $url'); // Debugging
-              },
-              onPageFinished: (String url) {
-                setState(() {
-                  _isLoading = false;
-                });
-                print('Page finished loading: $url'); // Debugging
-              },
-              onWebResourceError: (WebResourceError error) {
-                setState(() {
-                  _isLoading = false;
-                  _loadError =
-                      'Error: ${error.description} (Code: ${error.errorCode})';
-                });
-                print('Web resource error: $_loadError'); // Debug
-              },
-              onNavigationRequest: (NavigationRequest request) {
-                print('Navigation request to ${request.url}'); // Debugging
-                return NavigationDecision.navigate; // Allow all navigations
-              },
-            ),
-          );
-    // ..loadRequest(Uri.parse(widget.googleMapsUrl)); // REMOVE THIS LINE
+    WebViewController.fromPlatformCreationParams(params)
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String url) {
+            setState(() {
+              _isLoading = true;
+              _loadError = ''; // Clear any previous error
+            });
+            print('Page started loading: $url'); // Debugging
+          },
+          onPageFinished: (String url) {
+            setState(() {
+              _isLoading = false;
+            });
+            print('Page finished loading: $url'); // Debugging
+          },
+          onWebResourceError: (WebResourceError error) {
+            setState(() {
+              _isLoading = false;
+              _loadError =
+              'Error: ${error.description} (Code: ${error.errorCode})';
+            });
+            print('Web resource error: $_loadError'); // Debug
+          },
+          onNavigationRequest: (NavigationRequest request) {
+            print('Navigation request to ${request.url}'); // Debugging
+            return NavigationDecision.navigate; // Allow all navigations
+          },
+        ),
+      );
 
     // Load the iframe HTML directly
     _controller.loadHtmlString(_buildHtml(widget.googleMapsUrl));
@@ -120,28 +117,4 @@ class _GoogleMapsEmbedState extends State<GoogleMapsEmbed> {
       ],
     );
   }
-}
-
-class GoogleMapsEmbedScreen extends StatelessWidget {
-  final String googleMapsUrl;
-
-  const GoogleMapsEmbedScreen({
-    super.key,
-    this.googleMapsUrl =
-        'https://www.google.com/maps/place/33.17662691271624,36.299495902812446', // ** REPLACE THIS LINE **
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Embedded Google Map')),
-      body: SizedBox(
-        height: 400,
-        child: GoogleMapsEmbed(
-          googleMapsUrl:
-              'https://www.google.com/maps/place/33.17662691271624,36.299495902812446', // ** REPLACE THIS LINE **
-        ),
-      ),
-    );
-  }
-}
+}*/

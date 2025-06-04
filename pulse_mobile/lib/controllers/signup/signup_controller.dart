@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../models/signupModel.dart';
-import '../../services/connections.dart';
+import '../../models/signupModel.dart'; // Make sure this path is correct
+import '../../services/connections.dart'; // Make sure this path is correct
 
 class SignUpController extends GetxController {
   // --- Text Editing Controllers ---
@@ -24,14 +24,11 @@ class SignUpController extends GetxController {
   // --- Reactive Variables ---
   final isLoading = false.obs;
   final errorMessage = RxString('');
-  final user = SignupUserModel();
+  final user = SignupUserModel(); // The model that holds all signup data
   final selectedDate = Rx<DateTime?>(null);
-  // Removed bloodTestImage and idImage
-  // final bloodTestImage = Rx<File?>(null);
-  // final idImage = Rx<File?>(null);
 
-  // --- Navigation ---
-  final currentPage = 1.obs;
+  // --- Navigation & UI State ---
+  final currentPage = 1.obs; // Tracks the current page in a multi-step signup flow
   final isPasswordVisible = false.obs;
   final isTermsAgreed = false.obs;
 
@@ -52,48 +49,50 @@ class SignUpController extends GetxController {
   }
 
   void goToNextPage() {
-    print('Current Page: ${currentPage.value}');
-    print('Email: ${emailController.text}');
-    print('Password: ${passwordController.text}');
-    print('Confirm Password: ${confirmPasswordController.text}');
 
     if (currentPage.value == 1) {
       if (emailController.text.isEmpty ||
           passwordController.text.isEmpty ||
           confirmPasswordController.text.isEmpty) {
         errorMessage.value = 'Email, password, and confirm password are required.';
-        print('Error: ${errorMessage.value}');
+        print('Error (Page 1): ${errorMessage.value}');
+        Get.snackbar('Validation Error', errorMessage.value, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange.shade400, colorText: Colors.white);
         return;
       }
       if (!isValidEmail(emailController.text)) {
         errorMessage.value = 'Invalid email format.';
-        print('Error: ${errorMessage.value}');
+        print('Error (Page 1): ${errorMessage.value}');
+        Get.snackbar('Validation Error', errorMessage.value, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange.shade400, colorText: Colors.white);
         return;
       }
       if (passwordController.text.length < 8) {
         errorMessage.value = 'Password must be at least 8 characters.';
-        print('Error: ${errorMessage.value}');
+        print('Error (Page 1): ${errorMessage.value}');
+        Get.snackbar('Validation Error', errorMessage.value, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange.shade400, colorText: Colors.white);
         return;
       }
       if (passwordController.text != confirmPasswordController.text) {
         errorMessage.value = 'Passwords do not match.';
-        print('Error: ${errorMessage.value}');
+        print('Error (Page 1): ${errorMessage.value}');
+        Get.snackbar('Validation Error', errorMessage.value, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange.shade400, colorText: Colors.white);
         return;
       }
 
       user.email = emailController.text.trim();
       user.password = passwordController.text.trim();
-      errorMessage.value = '';
-      currentPage.value = 2;
-      print('Navigating to page 2');
-      Get.toNamed('/signup2');
+      errorMessage.value = ''; // Clear error message if validation passes
+      currentPage.value = 2; // Increment page count for internal tracking
+      print('Navigating to page 2 via Get.toNamed(/signup2)');
+      Get.toNamed('/signup2'); // Navigate to the next page
     }
-    // The logic for currentPage.value == 2 is now moved to completeSignup
   }
 
   void goToPreviousPage() {
     if (currentPage.value > 1) {
       currentPage.value--;
+      Get.back(); // Use Get.back() to pop the current page off the stack
+    } else {
+      Get.offAllNamed('/login'); // If on first page, go back to login screen
     }
   }
 
@@ -106,48 +105,27 @@ class SignUpController extends GetxController {
   Future<void> selectDate(BuildContext context) async {
     final pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: selectedDate.value ?? DateTime.now(), // Use selectedDate if already set
       firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
+      lastDate: DateTime.now(), // Cannot pick future dates
     );
     if (pickedDate != null) {
       selectedDate.value = pickedDate;
-      user.dateOfBirth = pickedDate.toIso8601String();
+      user.dateOfBirth = pickedDate.toIso8601String(); // Assign to model
       dateOfBirthController.text =
-      "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+      "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}"; // Update text field
     }
   }
 
-  // Removed pickImage function
-  // Future<void> pickImage(ImageSource source, bool isBloodTest) async {
-  //   try {
-  //     final pickedFile = await ImagePicker().pickImage(source: source);
-  //     if (pickedFile != null) {
-  //       final imageFile = File(pickedFile.path);
-  //       if (isBloodTest) {
-  //         bloodTestImage.value = imageFile;
-  //         user.bloodTestImage = imageFile;
-  //       } else {
-  //         idImage.value = imageFile;
-  //         user.idImage = imageFile;
-  //       }
-  //     } else {
-  //       print('No image selected.');
-  //     }
-  //   } catch (e) {
-  //     errorMessage.value = 'Error picking image: $e';
-  //     print('Error picking image: $e');
-  //   }
-  // }
-
   Future<void> completeSignup() async {
     isLoading.value = true;
-    errorMessage.value = '';
+    errorMessage.value = ''; // Clear previous errors
 
+    // --- Assign all form field values to the user model ---
     user.firstName = firstNameController.text.trim();
     user.lastName = lastNameController.text.trim();
     user.mobileNumber = phoneNumberController.text.trim();
-    user.dateOfBirth = selectedDate.value?.toIso8601String();
+    user.dateOfBirth = selectedDate.value?.toIso8601String(); // Use the picked date
     user.placeOfBirth = placeOfBirthController.text.trim();
     user.height = double.tryParse(heightController.text.trim());
     user.weight = double.tryParse(weightController.text.trim());
@@ -157,54 +135,83 @@ class SignUpController extends GetxController {
     user.address = addressController.text.trim();
     user.pictureUrl = pictureUrlController.text.trim();
 
+
+
+
+
+    // --- Client-side validation for Page 2 fields (and some cross-page checks) ---
     if (firstNameController.text.isEmpty ||
         lastNameController.text.isEmpty ||
         phoneNumberController.text.isEmpty ||
-        selectedDate.value == null ||
+        selectedDate.value == null || // This ensures a date has been picked
         placeOfBirthController.text.isEmpty ||
         heightController.text.isEmpty ||
-        weightController.text.isEmpty ||
-        bloodTypeController.text.isEmpty ||
-        fingerprintController.text.isEmpty ||
-        genderController.text.isEmpty ||
-        addressController.text.isEmpty) {
-      errorMessage.value = 'All fields are required.';
+        weightController.text.isEmpty
+    ) {
+      errorMessage.value = 'All fields are required. Please fill in all details.';
       isLoading.value = false;
+      print('Validation Error: ${errorMessage.value}');
+      Get.snackbar('Validation Error', errorMessage.value, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange.shade400, colorText: Colors.white);
+      return; // Stop execution here if validation fails
+    }
+
+    if (user.height == null || user.height! <= 0) { // Check for valid positive number
+      errorMessage.value = 'Invalid height format. Please use a positive number.';
+      isLoading.value = false;
+      print('Validation Error: ${errorMessage.value}');
+      Get.snackbar('Validation Error', errorMessage.value, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange.shade400, colorText: Colors.white);
+      return;
+    }
+    if (user.weight == null || user.weight! <= 0) { // Check for valid positive number
+      errorMessage.value = 'Invalid weight format. Please use a positive number.';
+      isLoading.value = false;
+      print('Validation Error: ${errorMessage.value}');
+      Get.snackbar('Validation Error', errorMessage.value, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange.shade400, colorText: Colors.white);
       return;
     }
 
-    if (user.height == null) {
-      errorMessage.value = 'Invalid height format. Please use a number.';
-      isLoading.value = false;
-      return;
-    }
-    if (user.weight == null) {
-      errorMessage.value = 'Invalid weight format. Please use a number.';
-      isLoading.value = false;
-      return;
-    }
-
+    // Re-check password match for robustness, though ideally done on page 1
     if (passwordController.text != confirmPasswordController.text) {
-      errorMessage.value = 'Passwords do not match.';
+      errorMessage.value = 'Passwords do not match. Please go back and correct.';
       isLoading.value = false;
+      print('Validation Error: ${errorMessage.value}');
+      Get.snackbar('Validation Error', errorMessage.value, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange.shade400, colorText: Colors.white);
       return;
     }
 
-    final response = await apiService.signUp(user); // Call the signUp method
+    if (!isTermsAgreed.value) {
+      errorMessage.value = 'You must agree to the Terms of Service and Privacy Policy.';
+      isLoading.value = false;
+      print('Validation Error: ${errorMessage.value}');
+      Get.snackbar('Validation Error', errorMessage.value, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.orange.shade400, colorText: Colors.white);
+      return;
+    }
 
-    isLoading.value = false;
-    if (response['success']) {
-      Get.snackbar('Success', response['message'],
-          snackPosition: SnackPosition.BOTTOM);
-      Get.offAllNamed('/login');
+
+    // --- API Call ---
+    // Ensure that apiService.signUp method takes the `user` object and uses `user.toJson()`
+    final response = await apiService.signUp(user);
+
+
+
+    isLoading.value = false; // Turn off loading indicator regardless of success/failure
+    FocusManager.instance.primaryFocus?.unfocus(); // Unfocus before navigation
+    // --- Handle API Response ---
+    if (response['success'] == true) {
+      Get.snackbar('Success', response['message'] ?? 'Signup successful!',
+          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green.shade400, colorText: Colors.white);
+      Get.offAllNamed('/login'); // Navigate to login page
     } else {
-      errorMessage.value = response['message'];
-      print('Signup failed: ${response['error']}');
+      // This block executes if response['success'] is false or not present.
+      errorMessage.value = response['message'] ?? 'An unknown signup error occurred.';
+      print('DEBUG: Signup failed due to conditional check. Message: ${errorMessage.value}, API Error: ${response['error']}');
+      Get.snackbar('Signup Failed', errorMessage.value, snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red.shade400, colorText: Colors.white);
     }
   }
 
   @override
   void onClose() {
+    // Dispose the TextEditingControllers immediately and synchronously.
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -220,6 +227,9 @@ class SignUpController extends GetxController {
     genderController.dispose();
     addressController.dispose();
     pictureUrlController.dispose();
+
+    // Call super.onClose() last, after your disposals.
     super.onClose();
+
   }
 }

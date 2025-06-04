@@ -12,30 +12,33 @@ class MedicationsAndPrescriptionsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(titleText: 'Medications & Prescriptions'),
-      body: SingleChildScrollView( // Changed to SingleChildScrollView
-        child: Column(
-          children: [
-            CustomListItem(
-              title: 'Current Medications',
-              onTap: () {
-                Get.toNamed('/currentMedications');
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22.0),
-              child: const Divider( // Moved Divider here
-                color: AppLightModeColors.textFieldBorder,
-                thickness: 1.0,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: SingleChildScrollView( // Changed to SingleChildScrollView
+          child: Column(
+            children: [
+              CustomListItem(
+                title: 'Current Medications',
+                onTap: () {
+                  Get.toNamed('/currentMedications');
+                },
               ),
-            ),
-            CustomListItem(
-              title: 'Prescription History',
-              onTap: () {
-                Get.toNamed('/prescriptionHistory');
-              },
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                child: const Divider( // Moved Divider here
+                  color: AppLightModeColors.textFieldBorder,
+                  thickness: 1.0,
+                ),
+              ),
+              CustomListItem(
+                title: 'Prescription History',
+                onTap: () {
+                  Get.toNamed('/prescriptionHistory');
+                },
+              ),
 
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: CustomBottomNavBar(),

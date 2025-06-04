@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 import '../theme/app_light_mode_colors.dart';
 
 class CircularDoctorWidget extends StatelessWidget {

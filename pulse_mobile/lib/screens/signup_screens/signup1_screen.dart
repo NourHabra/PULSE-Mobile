@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 import 'package:pulse_mobile/theme/app_light_mode_colors.dart';
 import 'package:pulse_mobile/widgets/appbar.dart';
 import 'package:pulse_mobile/widgets/custom_textfield.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-
 import '../../controllers/signup/signup_controller.dart';
 
 class SignUpPage1 extends GetView<SignUpController> {

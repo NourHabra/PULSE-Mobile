@@ -6,6 +6,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../controllers/medications/PrescriptionList_controller.dart';
 import '../../theme/app_light_mode_colors.dart';
 import '../../widgets/appbar.dart';
+import '../../widgets/bottombar.dart';
 import '../../widgets/prescriptionsListItem.dart';
 
 class PrescriptionsScreen extends StatelessWidget {
@@ -63,16 +64,18 @@ class PrescriptionsScreen extends StatelessWidget {
                         prescriptionId: prescription.id,
                         name: prescription.doctorName,
                         speciality: prescription.doctorSpeciality,
-                        untilDate: prescription.validUntil,
+                        notes: prescription.notes, // Changed from untilDate to notes
                       );
                     },
                   );
+
                 }
               },
             ),
           ),
         ],
       ),
+      bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 }

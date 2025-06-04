@@ -1,20 +1,28 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/io_client.dart';
+import 'package:pulse_mobile/models/mySavedDoctor_model.dart';
+import '../models/LabModel.dart';
 import '../models/categoryModel.dart';
 import '../models/doctor_model_featured_homepage.dart';
+import '../models/emergencyEvent.dart';
+import '../models/generalDoctorModel.dart';
+import '../models/labTestModel.dart';
+import '../models/medical_record_details_model.dart';
+import '../models/medicalrecordlistitemsModel.dart';
 import '../models/medicationModel.dart';
+import '../models/mySavedLab_model.dart';
+import '../models/mySavedPharmacy_model.dart';
 import '../models/prescriptionListitemModel.dart';
 import '../models/profile_model.dart';
 import '../models/signupModel.dart';
 import '../models/vitals_model.dart';
 
 class ApiService extends GetxService {
-  final String baseUrl = 'https://192.168.181.222:8443';
+  final String baseUrl = 'https://192.168.190.222:8443';
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   final http.Client _httpClient =
   _createHttpClient(); // Use custom client for HTTPS
@@ -344,190 +352,149 @@ class ApiService extends GetxService {
     }
   }
 
-  // Signup Service
-  // Signup Service
+  // sign up
+  // In ApiService
   Future<Map<String, dynamic>> signUp(SignupUserModel user) async {
     final url = Uri.parse('$baseUrl/auth/register/patient');
-    final headers = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    };
 
     try {
-      final response = await _httpClient.post(
+      final httpResponse = await _httpClient.post( // Renamed to httpResponse to avoid confusion
         url,
-        headers: headers,
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: jsonEncode(user.toJson()),
       );
 
-      if (response.statusCode == 201) {
+      print('HTTP Status Code (Signup): ${httpResponse.statusCode}');
+      print('Response Body (Signup): ${httpResponse.body}');
+
+      // Parse the response body first, as it contains the actual message
+      final responseData = json.decode(httpResponse.body);
+      final String serverMessage = responseData['message'] ?? 'No message from server.';
+
+      // Check for success based on the status code AND potentially the message
+      if (httpResponse.statusCode == 200 || httpResponse.statusCode == 201) {
+        // It's a success!
         return {
           'success': true,
-          'message': 'Signup successful!',
+          'message': serverMessage, // Use the message from the backend response
+          'token': responseData['token'], // Optionally pass the token up if needed immediately
+          'user': responseData['user'],
+          // Optionally pass the user object up
         };
       } else {
-        final responseData = json.decode(response.body);
+        // It's a failure based on status code
         return {
           'success': false,
-          'message':
-          responseData['message'] ?? 'Signup failed. Please try again.',
-          'error': response.body,
+          'message': serverMessage, // Use the message from the backend response
+          'error': httpResponse.body, // Full response for debugging
         };
       }
-    } catch (e) {
+    } on SocketException catch (e) {
+      print('Network error during signup: $e');
       return {
         'success': false,
-        'message': 'Error: $e',
+        'message': 'Network error. Please check your internet connection and server.',
+        'error': e.toString(),
+      };
+    } on FormatException catch (e) {
+      print('JSON decoding error during signup: $e');
+      return {
+        'success': false,
+        'message': 'Invalid data received from server.',
+        'error': e.toString(),
+      };
+    } catch (e) {
+      print('An unexpected error occurred during signup: $e');
+      return {
+        'success': false,
+        'message': 'An unexpected error occurred during signup.',
         'error': e.toString(),
       };
     }
   }
 
-
-//// get current medications
+// --- NEW getCurrentMedications method ---
   Future<List<Medication>> getCurrentMedications() async {
     final String? token = await getToken();
     if (token == null) {
-      return _getFakeMedications(); // Return fake data if no token
+      print('Authentication token is not available for current medications. User is likely not logged in.');
+      throw Exception('Authentication required to fetch current medications.');
     }
-    final url =
-    Uri.parse('$baseUrl/api/medications/current'); // Replace with your actual API endpoint
+
+    // The API endpoint you provided
+    final url = Uri.parse('$baseUrl/api/prescription-drug/patient/me');
+
     try {
       final response = await _httpClient.get(
         url,
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json', // Good practice to include
+        },
       );
 
       if (response.statusCode == 200) {
+        // Log the raw response for debugging
+        print('Current Medications API Response (${response.statusCode}):');
+        print(response.body);
+
+        // Decode the JSON response
         final List<dynamic> data = json.decode(response.body);
-        return data
-            .map((json) => Medication.fromJson(json as Map<String, dynamic>))
-            .toList();
+
+        // Map the list of JSON objects to a list of Medication objects
+        return data.map((json) => Medication.fromJson(json as Map<String, dynamic>)).toList();
       } else {
-        print('API Error (Current Medications): ${response.statusCode}');
-        return _getFakeMedications(); // Return fake data on API error
+        // Handle non-200 status codes
+        print('API Error (Current Medications): ${response.statusCode} - ${response.body}');
+        throw Exception('Failed to load current medications: ${response.statusCode}');
       }
     } catch (e) {
+      // Handle network errors or JSON decoding errors
       print('Error fetching current medications: $e');
-      return _getFakeMedications(); // Return fake data on exception
+      throw Exception('Failed to connect to the server or parse current medications data: $e');
     }
   }
 
-  // Method to generate fake medication data
-  List<Medication> _getFakeMedications() {
-    return [
-      Medication(
-        tradeName: 'Fake Panadol',
-        pharmaComposition: 'Fake Acetaminophen',
-        numOfTimes: 'Once a day',
-        untilDate: '30/5/2025',
-      ),
-      Medication(
-        tradeName: 'Fake Advil',
-        pharmaComposition: 'Fake Ibuprofen',
-        numOfTimes: 'Twice a day',
-        untilDate: '05/6/2025',
-      ),
-      Medication(
-        tradeName: 'Fake Claritin',
-        pharmaComposition: 'Fake Loratadine',
-        numOfTimes: 'Once a day',
-        untilDate: '15/6/2025',
-      ),
-    ];
-  }
+
+
 ////get all prescriptions
+  /// Fetches all prescriptions for the current patient from the API.
   Future<List<Prescription>> getPrescriptions() async {
     final String? token = await getToken();
     if (token == null) {
-      return _getFakePrescriptions(); // Return fake data if no token
+      print('Authentication token is not available. User is likely not logged in.');
+      throw Exception('Authentication required.');
     }
-    final url =
-    Uri.parse('$baseUrl/api/prescriptions'); // Replace with your actual API endpoint
+
+    print('DEBUG: Token being sent: $token'); // <--- ADD THIS LINE
+    print('DEBUG: Requesting URL: $baseUrl/api/prescription/patient/me'); // <--- ADD THIS LINE
+
+    final url = Uri.parse('$baseUrl/api/prescription/patient/me');
+
     try {
       final response = await _httpClient.get(
         url,
-        headers: {'Authorization': 'Bearer $token'},
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
       );
 
       if (response.statusCode == 200) {
+        print(response.body);
         final List<dynamic> data = json.decode(response.body);
-        return data
-            .map((json) => Prescription.fromJson(json as Map<String, dynamic>))
-            .toList();
+        return data.map((json) => Prescription.fromJson(json as Map<String, dynamic>)).toList();
       } else {
-        print('API Error (Get Prescriptions): ${response.statusCode}');
-        return _getFakePrescriptions(); // Return fake data on API error
+        print('API Error (Get Prescriptions): ${response.statusCode} - ${response.body}');
+        throw Exception('Failed to load prescriptions: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching prescriptions: $e');
-      return _getFakePrescriptions(); // Return fake data on exception
+      throw Exception('Failed to connect to the server or parse data: $e');
     }
   }
 
-  // Method to generate fake prescription data
-  List<Prescription> _getFakePrescriptions() {
-    return [
-      Prescription(
-          id: 1,
-          doctorName: 'Dr. Marcus Horizon',
-          doctorSpeciality: 'Cardiologist',
-          validUntil: '22/5/2025'),
-      Prescription(
-          id: 2,
-          doctorName: 'Dr. Jane Smith',
-          doctorSpeciality: 'Dermatologist',
-          validUntil: '15/6/2025'),
-      Prescription(
-          id: 3,
-          doctorName: 'Dr. Robert Jones',
-          doctorSpeciality: 'Neurologist',
-          validUntil: '01/6/2025'),
-      Prescription(
-          id: 4,
-          doctorName: 'Dr. Emily White',
-          doctorSpeciality: 'Pediatrician',
-          validUntil: '10/5/2025'),
-      Prescription(
-          id: 5,
-          doctorName: 'Dr. David Brown',
-          doctorSpeciality: 'Orthopedist',
-          validUntil: '28/5/2025'),
-    ];
-  }
-////fetch doctors of each category
-  /*Future<List<dynamic>> fetchcategoryData(String endpoint) async {
-    List<dynamic> _getCategoryDataWithAssets() {
-      return [
-        {
-          'd_id': 101,
-          'name': 'Cardiologists',
-          'icon': 'assets/cardiology_600dp.png', //  asset path
-        },
-        {
-          'd_id': 102,
-          'name': 'Dermatologists',
-          'icon': 'assets/accessibility_600dp.png', // asset path
-        },
-        {
-          'd_id': 103,
-          'name': 'Pediatricians',
-          'icon': 'assets/child_friendly_600dp.png', // asset path
-        },
-        {
-          'd_id': 104,
-          'name': 'Neurologists',
-          'icon': 'assets/neurology_600dp_.png', // asset path
-        },
-        {
-          'd_id': 105,
-          'name': 'Internal Medicine',
-          'icon': 'assets/gastroenterology_600dp.png', // asset path
-        },
-      ];
-    }
-
-    return _getCategoryDataWithAssets();
-  }*/
 
 
 ///////////get vitals of patient in home page
@@ -545,6 +512,9 @@ class ApiService extends GetxService {
       );
 
       if (response.statusCode == 200) {
+        print('/////////////////hi vitals');
+        print(response.body);
+
         final List<dynamic> data = jsonDecode(response.body);
         // Map each item in the list to a Vital object
         return data.map((item) => Vital.fromJson(item as Map<String, dynamic>)).toList();
@@ -631,6 +601,8 @@ class ApiService extends GetxService {
         headers: {'Authorization': 'Bearer $token'},
       );
       if (response.statusCode == 200) {
+        print('hi all doctors');
+        print(response.body);
         return json.decode(response.body);
       } else {
         print('API Error (Get All Doctors): ${response.statusCode}');
@@ -639,6 +611,405 @@ class ApiService extends GetxService {
     } catch (e) {
       print('Error fetching all doctors: $e');
       throw Exception('Failed to connect to the server');
+    }
+  }
+
+  ////////////////Doctor details
+  // Fetch Doctor Details
+  Future<GeneralDoctor> fetchDoctorDetails(int doctorId) async {
+    final token = await getToken();
+    final response = await _httpClient.get(
+      Uri.parse('$baseUrl/auth/doctors/$doctorId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return GeneralDoctor.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load doctor details: ${response.statusCode}');
+    }
+  }
+//////////////////doctor map
+  Future<String> fetchDoctorMapUrl(int doctorId) async {
+    final token = await getToken();
+    final response = await _httpClient.get(
+      Uri.parse('$baseUrl/auth/$doctorId/coordinates/embed'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      // Assuming the API returns the URL directly in the response body
+      return response.body;
+    } else {
+      throw Exception('Failed to load doctor map URL: ${response.statusCode}');
+    }
+  }
+/////////////////mysaved details
+  // Generic function to handle API requests
+  Future<List<dynamic>?> fetchData(String endpoint) async {
+    final url = Uri.parse('$baseUrl$endpoint');
+    final token = await getToken(); // Get the token here
+    if (token == null) {
+      throw Exception('Token is null. User not authenticated.');
+    }
+    try {
+      final response = await _httpClient.get(url, headers: {
+        'Authorization': 'Bearer $token',
+      });
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        final List<dynamic> data =
+        json.decode(response.body) as List<dynamic>;
+        return data;
+      } else {
+        print(
+            'Failed to fetch data from $endpoint: ${response.statusCode}, body: ${response.body}');
+        return null; // Important: Return null for error handling
+      }
+    } catch (e) {
+      print('Error fetching data from $endpoint: $e');
+      return null; // Important: Return null for error handling
+    }
+  }
+
+  // Fetch saved doctors
+  Future<List<SavedDoctorModel>?> getSavedDoctors() async {
+    final data = await fetchData('/patient/saved/doctor');
+    if (data == null) return null;
+    return data.map((json) => SavedDoctorModel.fromJson(json)).toList();
+  }
+
+  // Fetch saved pharmacies
+  Future<List<PharmacyModel>?> getSavedPharmacies() async {
+    final data = await fetchData('/patient/saved/pharmacy');
+    if (data == null) return null;
+    return data.map((json) => PharmacyModel.fromJson(json)).toList();
+  }
+
+  // Fetch saved laboratories
+  Future<List<SavedLaboratoryModel>?> getSavedLaboratories() async {
+    final data = await fetchData('/patient/saved/laboratory');
+    if (data == null) return null;
+    return data.map((json) => SavedLaboratoryModel.fromJson(json)).toList();
+  }
+
+
+  // New method to remove a saved doctor
+  Future<void> removeSavedDoctor(int doctorId) async {
+    final url = Uri.parse('$baseUrl/patient/saved/doctor'); // No ID in the path
+    final token = await getToken();
+    if (token == null) {
+      throw Exception('Token is null. User not authenticated.');
+    }
+
+    try {
+      final response = await _httpClient.delete(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json', // IMPORTANT: Specify content type for JSON body
+        },
+        body: json.encode({'doctorId': doctorId}), // Encode the doctorId into a JSON body
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) { // 200 OK or 204 No Content are common for successful deletion
+        print('Successfully removed doctor with ID: $doctorId from saved list.');
+      } else {
+        print('Failed to remove doctor from saved list: ${response.statusCode}, body: ${response.body}');
+        throw Exception('Failed to remove doctor: ${response.body}');
+      }
+    } catch (e) {
+      print('Error removing doctor from saved list: $e');
+      throw Exception('Error removing doctor: $e');
+    }
+  }
+/////////////delete saved lab
+  Future<void> removeSavedLaboratory(int laboratoryId) async {
+    final url = Uri.parse('$baseUrl/patient/saved/laboratory'); // No ID in the path
+    final token = await getToken();
+    if (token == null) {
+      throw Exception('Token is null. User not authenticated.');
+    }
+
+    try {
+      final response = await _httpClient.delete(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json', // IMPORTANT: Specify content type for JSON body
+        },
+        body: json.encode({'laboratoryId': laboratoryId}), // Encode the laboratoryId into a JSON body
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        print('Successfully removed laboratory with ID: $laboratoryId from saved list.');
+      } else {
+        print('Failed to remove laboratory from saved list: ${response.statusCode}, body: ${response.body}');
+        throw Exception('Failed to remove laboratory: ${response.body}');
+      }
+    } catch (e) {
+      print('Error removing laboratory from saved list: $e');
+      throw Exception('Error removing laboratory: $e');
+    }
+  }
+
+
+  // Fetch Labs
+  Future<List<LabModel>> fetchLabs() async {
+    final response = await _httpClient.get(Uri.parse('$baseUrl/labs'));
+
+    if (response.statusCode == 200) {
+      print(response.body);
+
+      // Use the correct model here, LabModel
+      List<dynamic> body = jsonDecode(response.body);
+      //  print("API Response Body: $body");
+      return body.map((json) => LabModel.fromJson(json)).toList();
+    } else {
+      print('hi exception');
+      print(response.body);
+      throw Exception('Failed to load labs: ${response.statusCode}');
+    }
+  }
+
+  // Method to fetch a single lab by ID
+  Future<LabModel> fetchLabById(int id) async {
+    final response = await _httpClient.get(Uri.parse('$baseUrl/labs/$id'));
+    if (response.statusCode == 200) {
+      print(response.body);
+      Map<String, dynamic> body = jsonDecode(response.body);
+      return LabModel.fromJson(body);
+    } else {
+      throw Exception('Failed to load lab with ID $id: ${response.statusCode}');
+    }
+  }
+// method to fetch lab embed coordinates for map
+  Future<String> fetchLabEmbedCoordinates(int labId) async {
+    final token = await getToken();
+    if (token == null) {
+      throw Exception('Authentication token not found.');
+    }
+
+    final response = await _httpClient.get(
+      Uri.parse('$baseUrl/labs/$labId/coordinates/embed'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return response.body; // Assuming the response body is the URL string directly
+    } else {
+      throw Exception('Failed to load map coordinates for lab ID $labId: ${response.statusCode}');
+    }
+  }
+
+  // New method to fetch lab tests by lab ID
+  Future<List<LabTestModel>> fetchLabTests(int labId) async {
+    final token = await getToken();
+    if (token == null) {
+      throw Exception('Authentication token not found.');
+    }
+
+    final response = await _httpClient.get(
+      Uri.parse('$baseUrl/api/lab-tests/lab/$labId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('test body starts here');
+      print (response.body);
+      print("/////////////testbody ends here");
+      List<dynamic> body = jsonDecode(response.body);
+      return body.map((json) => LabTestModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load lab tests for lab ID $labId: ${response.statusCode}');
+    }
+  }
+  /// Fetches all Medical Record Entries (MREs) for the current patient from the API.
+  Future<List<MedicalRecord>> getMedicalRecords() async {
+    final String? token = await getToken();
+    if (token == null) {
+      print('Authentication token is not available for MREs. User is likely not logged in.');
+      throw Exception('Authentication required to fetch medical records.');
+    }
+
+    final url = Uri.parse('$baseUrl/mre/patient/me'); // Correct API endpoint
+
+    try {
+      final response = await _httpClient.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((json) => MedicalRecord.fromJson(json as Map<String, dynamic>)).toList();
+      } else {
+        print('API Error (Get Medical Records): ${response.statusCode} - ${response.body}');
+        throw Exception('Failed to load medical records: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching medical records: $e');
+      throw Exception('Failed to connect to the server or parse medical record data: $e');
+    }
+  }
+/////////////////////////////////////
+  Future<List<EmergencyEvent>> fetchEmergencyEvents() async {
+    final token = await getToken();
+    if (token == null) {
+
+      print('Warning: Token not found. Returning dummy emergency events for testing.');
+      await Future.delayed(const Duration(seconds: 1)); // Simulate network delay
+
+    }
+
+    final uri = Uri.parse('$baseUrl/emergencyevents/patient/me');
+    try {
+      final response = await _httpClient.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        final List<dynamic> jsonList = json.decode(response.body);
+        return jsonList.map((json) => EmergencyEvent.fromJson(json)).toList();
+      } else {
+        // Handle specific API error responses
+        print('API Error: ${response.statusCode} - ${response.body}');
+        throw Exception(
+            'Failed to load emergency events: ${response.statusCode} ${response.body}');
+      }
+    } on http.ClientException catch (e) {
+      throw Exception('Network connection error: $e');
+    } on FormatException catch (e) {
+      throw Exception('Failed to parse API response: $e');
+    } catch (e) {
+      throw Exception('An unexpected error occurred while fetching events: $e');
+    }
+  }
+
+  //////////////////////////////
+  Future<MedicalRecordDetails> getMedicalRecordDetails(int mreId) async {
+    final String? token = await getToken();
+    if (token == null) {
+      print('Authentication token is not available for MRE details. User is likely not logged in.');
+      throw Exception('Authentication required to fetch medical record details.');
+    }
+
+    final url = Uri.parse('$baseUrl/mre/$mreId');
+
+    try {
+      final response = await _httpClient.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('hi from details');
+        print('Response Body Length: ${response.body.length}'); // Add this
+        print('Raw Response Body: ${response.body}'); // Keep this
+
+        if (response.body.isEmpty) {
+          // Handle the case where the body is empty but status is 200
+          print('Received 200 OK but response body is empty for MRE ID: $mreId');
+          throw Exception('Server returned empty data for medical record details.');
+        }
+
+        final Map<String, dynamic> data = json.decode(response.body);
+        return MedicalRecordDetails.fromJson(data);
+      } else {
+        print('API Error (Get MRE Details): ${response.statusCode} - ${response.body}');
+        throw Exception('Failed to load medical records: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching medical record details: $e');
+      throw Exception('Failed to connect to the server or parse medical record details: $e');
+    }
+  }
+
+// --- NEW: Save Doctor API Call ---
+  Future<void> saveDoctor(int doctorId) async {
+    final String? token = await getToken();
+    if (token == null) {
+      print('Authentication token is not available. User is likely not logged in.');
+      throw Exception('Authentication required to save doctor.');
+    }
+
+    
+    // Use the correct base URL and endpoint provided by the user
+    final url = Uri.parse('$baseUrl/patient/saved/doctor');
+
+    try {
+      final response = await _httpClient.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({'doctorId': doctorId}), // Send doctorId in the body
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // 200 OK or 201 Created typically indicate success for POST
+        print('Doctor with ID $doctorId saved successfully.');
+      } else {
+        print('Failed to save doctor with ID $doctorId. Status: ${response.statusCode}, Body: ${response.body}');
+        throw Exception('Failed to save doctor: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Error saving doctor: $e');
+      throw Exception('Failed to connect to server or save doctor: $e');
+    }
+  }
+
+// NEW: Save Lab
+  Future<void> saveLab(int laboratoryId) async {
+    final url = Uri.parse('$baseUrl/patient/saved/laboratory');
+    final token = await getToken();
+    if (token == null) {
+      throw Exception('Token is null. User not authenticated.');
+    }
+    try {
+      final response = await _httpClient.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({'laboratoryId': laboratoryId}),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Successfully saved laboratory with ID: $laboratoryId.');
+      } else {
+        print('Failed to save laboratory: ${response.statusCode}, body: ${response.body}');
+        throw Exception('Failed to save laboratory: ${response.body}');
+      }
+    } catch (e) {
+      print('Error saving laboratory: $e');
+      throw Exception('Error saving laboratory: $e');
     }
   }
 

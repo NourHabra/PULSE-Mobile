@@ -19,12 +19,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0,left: 10),
+      padding: const EdgeInsets.only(top: 10.0,left: 10,bottom: 2),
       child: AppBar(
         backgroundColor:
         Colors.transparent, // Set the background color to transparent
         leading: IconButton(
-          icon: leadingIcon ?? const Icon(FeatherIcons.chevronLeft, size: 30,),
+          icon: leadingIcon ?? const Icon(FeatherIcons.chevronLeft, size: 32,),
           onPressed: onLeadingPressed ?? () => Get.back(),
         ),
         title: Text(

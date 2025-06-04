@@ -40,7 +40,7 @@ class EmergencyButton extends StatelessWidget {
               ),
             ],
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -56,9 +56,10 @@ class EmergencyButton extends StatelessWidget {
                 style: TextStyle(
                   color: textColor,
 
-                  fontSize: 17,
+                  fontSize: 18,
                 ),
               ),
+              const SizedBox(width: 10),
             ],
           ),
         ),
