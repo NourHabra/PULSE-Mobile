@@ -6,6 +6,7 @@ import '../../controllers/profile/mysavedDetails_controller.dart';
 import '../../models/mySavedDoctor_model.dart';
 import '../../models/mySavedLab_model.dart';
 import '../../models/mySavedPharmacy_model.dart';
+import '../../theme/app_light_mode_colors.dart';
 import '../../widgets/appbar.dart';
 import '../../widgets/bottombar.dart';
 import '../../widgets/mySavedCard.dart';
@@ -29,7 +30,7 @@ class MySavedDetailsPage extends StatelessWidget {
         } else if (controller.errorMessage.isNotEmpty) {
           return Center(child: Text(controller.errorMessage.value));
         } else if (controller.savedItems.isEmpty) {
-          return Center(child: Text('No saved ${categoryName.toLowerCase()}.'));
+          return Center(child: Text('No saved ${categoryName.toLowerCase()}.',style: TextStyle(color: AppLightModeColors.normalText),));
         } else {
           return Padding(
             padding: const EdgeInsets.all(20.0),
@@ -69,12 +70,9 @@ class MySavedDetailsPage extends StatelessWidget {
                   type = 'pharmacy';
                   // NEW: Navigation for Pharmacy (if applicable, or keep null)
                   cardOnTap = () {
-                    // Get.toNamed('/pharmacydetails', arguments: {'pharmacyId': item.id});
+                     Get.toNamed('/pharmacydetails', arguments: {'pharmacyId': item.id});
                     // For now, no specific navigation for pharmacies, or add your pharmacy route.
-                    Get.snackbar('Info', 'Pharmacy details not yet implemented.',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.blueGrey,
-                        colorText: Colors.white);
+
                   };
                 } else {
                   return const SizedBox.shrink();

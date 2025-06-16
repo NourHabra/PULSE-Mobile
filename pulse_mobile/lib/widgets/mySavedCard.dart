@@ -73,6 +73,7 @@ class MySavedCard extends StatelessWidget {
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 25.0,
+                          color: AppLightModeColors.normalText
                         ),
                       ),
                       Text(

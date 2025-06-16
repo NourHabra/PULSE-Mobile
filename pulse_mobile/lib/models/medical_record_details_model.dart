@@ -1,93 +1,95 @@
 import 'package:intl/intl.dart';
+import 'dart:developer'; // Import for log
 
 class MedicalRecordDetails {
-  final int entryId;
+  final int? entryId;
   final String title;
   final String formattedDate;
   final String doctorName;
   final String doctorSpecialty;
-  final String? symptoms; // Assuming symptoms might be a string
-  final String? diagnosis;
-  final String? medicalPrescription;
-  final String? labTest;
-  final String? notes;
+  final String? officialDiagnosis;
+  final String? diagnosisFollowUps;
+  final String? emergencyNotes;
+  final String? prescriptionNotes;
+  final String? prescriptionStatus;
 
   MedicalRecordDetails({
-    required this.entryId,
+    this.entryId,
     required this.title,
     required this.formattedDate,
     required this.doctorName,
     required this.doctorSpecialty,
-    this.symptoms,
-    this.diagnosis,
-    this.medicalPrescription,
-    this.labTest,
-    this.notes,
+    this.officialDiagnosis,
+    this.diagnosisFollowUps,
+    this.emergencyNotes,
+    this.prescriptionNotes,
+    this.prescriptionStatus,
   });
 
   factory MedicalRecordDetails.fromJson(Map<String, dynamic> json) {
-    // Parse timestamp
+    log('MedicalRecordDetails.fromJson received JSON: $json');
+
+    // Check parsing of entryId
+    log('Attempting to parse medicalRecordEntryId. Value in JSON: ${json['medicalRecordEntryId']}');
+    final int? parsedEntryId = json['medicalRecordEntryId'] as int?; // This was the main suspect
+    log('Parsed entryId: $parsedEntryId');
+
     String date = 'N/A';
     if (json['timestamp'] is List) {
       List<int> timestamp = List<int>.from(json['timestamp']);
       if (timestamp.length >= 3) {
         try {
           DateTime dateTime = DateTime(
-            timestamp[0],
-            timestamp[1],
-            timestamp[2],
+            timestamp[0], timestamp[1], timestamp[2],
             timestamp.length > 3 ? timestamp[3] : 0,
             timestamp.length > 4 ? timestamp[4] : 0,
             timestamp.length > 5 ? timestamp[5] : 0,
           );
-          date = DateFormat('d/M/yyyy').format(dateTime); // Format as 1/8/2022
+          date = DateFormat('d/M/yyyy').format(dateTime);
         } catch (e) {
-          print('Error parsing timestamp in MedicalRecordDetails: $e');
+          log('Error parsing timestamp in MedicalRecordDetails: $e');
         }
+      }
+    } else if (json['timestamp'] is String && json['timestamp'].isNotEmpty) {
+      try {
+        DateTime dateTime = DateTime.parse(json['timestamp']);
+        date = DateFormat('d/M/yyyy').format(dateTime);
+      } catch (e) {
+        log('Error parsing string timestamp in MedicalRecordDetails: $e');
       }
     }
 
-    // Extracting doctor's name and specialty (assuming from emergencyEvent.emergencyWorker)
-    String doctorName = 'N/A';
-    String doctorSpecialty = 'N/A'; // Assuming specialty is not directly in the API for doctor
-    // Let's assume 'Endocrinologist' is hardcoded or inferred from context
-    // or comes from a 'role' if API provides it
-    if (json['emergencyEvent'] != null && json['emergencyEvent']['emergencyWorker'] != null) {
-      final worker = json['emergencyEvent']['emergencyWorker'];
-      doctorName = '${worker['firstName']} ${worker['lastName']}';
-      // If your API provides specialty for the doctor, parse it here
-      // For now, we'll use a placeholder as in the screenshot: "Endocrinologist"
-      doctorSpecialty = 'Endocrinologist'; // Placeholder based on screenshot
-    } else if (json['doctor'] != null) { // If there's a direct 'doctor' field
-      doctorName = '${json['doctor']['firstName']} ${json['doctor']['lastName']}';
-      doctorSpecialty = json['doctor']['specialty'] ?? 'N/A';
+    String doctorName = 'Emergency event';
+    String doctorSpecialty = 'N/A';
+
+    if (json['diagnosis'] != null && json['diagnosis']['doctor'] != null) {
+      doctorName = '${json['diagnosis']['doctor']['firstName'] ?? ''} ${json['diagnosis']['doctor']['lastName'] ?? ''}'.trim();
+      doctorSpecialty = json['diagnosis']['doctor']['specialization'] as String? ?? 'N/A';
+    } else if (json['prescription'] != null && json['prescription']['doctor'] != null) {
+      doctorName = '${json['prescription']['doctor']['firstName'] ?? ''} ${json['prescription']['doctor']['lastName'] ?? ''}'.trim();
+      doctorSpecialty = json['prescription']['doctor']['specialization'] as String? ?? 'N/A';
+    } else if (json['emergencyEvent'] != null && json['emergencyEvent']['emergencyWorker'] != null) {
+      doctorName = '${json['emergencyEvent']['emergencyWorker']['firstName'] ?? ''} ${json['emergencyEvent']['emergencyWorker']['lastName'] ?? ''}'.trim();
+      doctorSpecialty = 'Emergency Worker';
     }
 
-
-    // Access the 'medicalRecordEntry' object first if it exists
-    final Map<String, dynamic>? medicalRecordEntryData = json['medicalRecordEntry'];
-
-    // Prioritize data from medicalRecordEntry if available, otherwise from top-level
-    final int id = medicalRecordEntryData?['medicalRecordEntryId'] as int? ?? json['entryId'] as int;
-    final String titleValue = medicalRecordEntryData?['title'] as String? ?? json['title'] as String? ?? 'No Title';
-    final String? symptomsValue = medicalRecordEntryData?['symptoms'] as String? ?? json['symptoms'] as String?;
-    final String? diagnosisValue = medicalRecordEntryData?['diagnosis'] as String? ?? json['diagnosis'] as String?;
-    final String? prescriptionValue = medicalRecordEntryData?['medicalPrescription'] as String? ?? json['medicalPrescription'] as String?;
-    final String? labTestValue = medicalRecordEntryData?['labTest'] as String? ?? json['labTest'] as String?;
-    final String? notesValue = medicalRecordEntryData?['notes'] as String? ?? json['notes'] as String?;
-
+    final String? officialDiagnosis = json['diagnosis']?['officialDiagnosis'] as String?;
+    final String? diagnosisFollowUps = json['diagnosis']?['followUps'] as String?;
+    final String? emergencyNotes = json['emergencyEvent']?['notes'] as String?;
+    final String? prescriptionNotes = json['prescription']?['notes'] as String?;
+    final String? prescriptionStatus = json['prescription']?['status'] as String?;
 
     return MedicalRecordDetails(
-      entryId: id,
-      title: titleValue,
+      entryId: parsedEntryId,
+      title: json['title'] as String? ?? 'N/A',
       formattedDate: date,
       doctorName: doctorName,
       doctorSpecialty: doctorSpecialty,
-      symptoms: symptomsValue,
-      diagnosis: diagnosisValue,
-      medicalPrescription: prescriptionValue,
-      labTest: labTestValue,
-      notes: notesValue,
+      officialDiagnosis: officialDiagnosis,
+      diagnosisFollowUps: diagnosisFollowUps,
+      emergencyNotes: emergencyNotes,
+      prescriptionNotes: prescriptionNotes,
+      prescriptionStatus: prescriptionStatus,
     );
   }
 }

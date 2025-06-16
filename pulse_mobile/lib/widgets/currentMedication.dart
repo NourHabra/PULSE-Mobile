@@ -72,7 +72,8 @@ class Currentmedication extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 21,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black,
+                      color: AppLightModeColors.normalText
+                      ,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

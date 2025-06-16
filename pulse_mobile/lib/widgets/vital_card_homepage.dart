@@ -7,7 +7,7 @@ class VitalCard extends StatelessWidget {
   final String? bottomText;
   final IconData? icon;
   final double? width;
-  final double? height;
+  final double? height; // This can now be null and let content drive height
   final double? borderRadius;
 
   const VitalCard({
@@ -27,7 +27,8 @@ class VitalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width,
-      height: height,
+      // Removed fixed height here, let content dictate height
+      // height: height,
       decoration: BoxDecoration(
         color: color ?? Colors.blue,
         borderRadius: BorderRadius.circular(borderRadius!),
@@ -56,6 +57,8 @@ class VitalCard extends StatelessWidget {
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
                 ),
+                overflow: TextOverflow.ellipsis, // Added overflow
+                maxLines: 1, // Added maxLines
               ),
             const SizedBox(height: 2),
             if (middleMainText != null || middleSubText != null)
@@ -63,26 +66,34 @@ class VitalCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   if (middleMainText != null)
-                    Transform.translate(
-                      offset: const Offset(0, -2), // Changed to -2 to move it up
-                      child: Text(
-                        middleMainText!,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w400,
+                    Flexible( // Use Flexible to allow text to shrink
+                      child: Transform.translate(
+                        offset: const Offset(0, -2),
+                        child: Text(
+                          middleMainText!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          overflow: TextOverflow.ellipsis, // Added overflow
+                          maxLines: 1, // Added maxLines
                         ),
                       ),
                     ),
                   const SizedBox(width: 3),
                   if (middleSubText != null)
-                    Transform.translate(
-                      offset: const Offset(0,-5),
-                      child: Text(
-                        middleSubText!,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
+                    Flexible( // Use Flexible
+                      child: Transform.translate(
+                        offset: const Offset(0,-5),
+                        child: Text(
+                          middleSubText!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                          overflow: TextOverflow.ellipsis, // Added overflow
+                          maxLines: 1, // Added maxLines
                         ),
                       ),
                     ),
@@ -98,6 +109,8 @@ class VitalCard extends StatelessWidget {
                     color: Colors.white,
                     fontSize: 14,
                   ),
+                  overflow: TextOverflow.ellipsis, // Added overflow
+                  maxLines: 1, // Added maxLines
                 ),
               ),
           ],

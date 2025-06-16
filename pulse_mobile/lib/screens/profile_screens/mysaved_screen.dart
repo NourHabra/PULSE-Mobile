@@ -1,10 +1,11 @@
+// lib/screens/profile_screens/mySavedPage.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pulse_mobile/widgets/appbar.dart';
 import '../../controllers/profile/mySavedProfile_controller.dart';
 import '../../models/categoryModel.dart';
 import '../../widgets/bottombar.dart';
-import '../../widgets/rectangular_category_item.dart'; // Import the new widget
+import '../../widgets/rectangular_category_item.dart';
 
 class MySavedPage extends StatelessWidget {
   final MySavedController controller = Get.put(MySavedController());
@@ -33,6 +34,9 @@ class MySavedPage extends StatelessWidget {
                   child: RectangularCategoryItem(
                     category: category,
                     onTap: () {
+                      print('Tapped Saved Category: ${category.title}'); // Debugging print
+
+                      // Navigate to Category Detail for all categories, including Pharmacies
                       final savedItemIds =
                       controller.getSavedItemIds(category.title);
 
@@ -41,6 +45,7 @@ class MySavedPage extends StatelessWidget {
                         category.id,
                         category.title,
                         savedItemIds,
+
                       );
                     },
                   ),

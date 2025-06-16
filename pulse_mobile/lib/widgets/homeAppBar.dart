@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../screens/home_screens/qrcode_scanner.dart';
+import '../theme/app_light_mode_colors.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String titleText;
@@ -26,6 +31,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 26,
+               color: AppLightModeColors.normalText
             ),
           ),
         ),
@@ -34,11 +40,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           Padding(
             padding: const EdgeInsets.symmetric( horizontal: 10),
             child: IconButton(
-              icon: const Icon(FeatherIcons.bell, size: 30),
-              onPressed: onNotificationPressed ?? () {
-                print('Notification icon pressed!');
-                // Add your notification action here
-              },
+              icon: const Icon(Icons.qr_code_scanner, size: 32,color: AppLightModeColors.normalText,),
+
+                onPressed: () {
+                  Get.to(() => QrScannerScreen()); // Navigate to the separate QrScannerScreen
+                },
+
             ),
           ),
         ],

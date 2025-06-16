@@ -1,91 +1,111 @@
+// controllers/profile/editProfile_controller.dart
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:image_picker/image_picker.dart';
 import '../../models/profile_model.dart';
 import '../../services/connections.dart';
 
 class EditProfileController extends GetxController {
-  // Get the ApiService instance
   final ApiService apiService = Get.find<ApiService>();
 
-  // Text editing controllers for the form fields
   final TextEditingController bloodTypeController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
 
-  // Rx variables for managing data and state
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
-  final Rx<Profile?> profile = Rx<Profile?>(null); // Use Rx<Profile?>
+  final Rx<Profile?> profile = Rx<Profile?>(null);
+  final Rx<XFile?> _selectedImageFile = Rx<XFile?>(null);
 
-  // Get the user token (replace with your actual token retrieval logic)
-  String? _getUserToken() {
-    //  SharedPreferences,  Secure Storage, or from GetX.
-    //  For example:
-    // return Get.find<AuthController>().user.value?.authToken;
-    return "dummy_user_token"; // Replace with actual token retrieval
-  }
+  XFile? get selectedImageFile => _selectedImageFile.value;
 
   @override
   void onInit() {
     super.onInit();
-    loadUserProfile(); // Load profile data when the controller is initialized
+    loadUserProfile();
   }
 
-  // Load User Profile Data
   Future<void> loadUserProfile() async {
     isLoading.value = true;
     errorMessage.value = '';
-    final token = _getUserToken();
-    if (token == null) {
-      errorMessage.value = 'User not authenticated.';
+    final tokenCheck = await apiService.getToken();
+    if (tokenCheck == null || tokenCheck.isEmpty) {
+      errorMessage.value = 'User not authenticated. No token found.';
       isLoading.value = false;
+      Get.snackbar('Error', 'Authentication token missing. Please log in again.');
       return;
     }
 
     try {
-      profile.value = await apiService.getUserProfileEdit(token); // Await the result
+      profile.value = await apiService.getUserProfileEdit();
       if (profile.value != null) {
-        // Populate the text fields with the loaded data
         bloodTypeController.text = profile.value?.bloodType ?? '';
         weightController.text = profile.value?.weight?.toString() ?? '';
         heightController.text = profile.value?.height?.toString() ?? '';
       }
     } catch (e) {
       errorMessage.value = e.toString();
+      Get.snackbar('Error', 'Failed to load profile: $e');
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Update User Profile Data
+  Future<void> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    try {
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        _selectedImageFile.value = image;
+      }
+    } catch (e) {
+      errorMessage.value = 'Failed to pick image: $e';
+      Get.snackbar('Error', errorMessage.value);
+    }
+  }
+
   Future<void> saveUserProfile() async {
     isLoading.value = true;
     errorMessage.value = '';
-    final token = _getUserToken();
-    if (token == null) {
-      errorMessage.value = 'User not authenticated.';
+    final tokenCheck = await apiService.getToken();
+    if (tokenCheck == null || tokenCheck.isEmpty) {
+      errorMessage.value = 'User not authenticated. No token found to save profile.';
       isLoading.value = false;
+      Get.snackbar('Error', 'Authentication token missing. Please log in again.');
       return;
     }
 
-    // Create a Profile object from the form data
-    final updatedProfile = Profile(
-      bloodType: bloodTypeController.text,
+    // Create a Profile object containing only the fields intended for the 'dto' part.
+    // The pictureUrl here is not used for the multipart file upload itself,
+    // but the backend might expect it to remain if the image wasn't changed.
+    final profileDataForDto = Profile(
+      bloodType: bloodTypeController.text.isNotEmpty ? bloodTypeController.text : null,
       weight: double.tryParse(weightController.text),
       height: double.tryParse(heightController.text),
-      // Keep the existing picture URL.
-      pictureUrl: profile.value?.pictureUrl, // important
+      // If other fields like firstName, lastName, etc. are part of the update DTO,
+      // you would also include them here from their respective controllers/initial values.
+      // For now, based on Postman, only bloodType, weight, height are in 'dto'.
     );
 
+    // Get the file to be uploaded, if one was selected
+    File? fileToUpload;
+    if (_selectedImageFile.value != null) {
+      fileToUpload = File(_selectedImageFile.value!.path);
+    }
+
     try {
-      await apiService.updateUserProfile(token, updatedProfile);
-      // Optionally, show a success message
+      await apiService.updateUserProfile(profileDataForDto, newProfilePicture: fileToUpload);
       Get.snackbar('Success', 'Profile updated successfully!');
-      // Update the local profile data
-      profile.value = updatedProfile;
+
+      // After successful update, reload profile to get latest data from backend,
+      // including the new pictureUrl if it was updated on the server.
+      await loadUserProfile(); // This will refresh the profile.value and display new image
+
+      _selectedImageFile.value = null; // Clear selected image after successful save
     } catch (e) {
       errorMessage.value = e.toString();
+      Get.snackbar('Error', 'Failed to save profile: $e');
     } finally {
       isLoading.value = false;
     }
@@ -93,10 +113,10 @@ class EditProfileController extends GetxController {
 
   @override
   void onClose() {
-    // Dispose the controllers
     bloodTypeController.dispose();
     weightController.dispose();
     heightController.dispose();
+    _selectedImageFile.close();
     super.onClose();
   }
 }

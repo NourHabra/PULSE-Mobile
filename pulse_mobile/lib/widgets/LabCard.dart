@@ -56,6 +56,7 @@ class LabCard extends StatelessWidget {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
+                        color: AppLightModeColors.normalText,
                       ),
                     ),
                     const SizedBox(height: 2),

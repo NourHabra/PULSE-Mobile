@@ -1,69 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../services/connections.dart'; // Import the merged ApiService
 
 class ForgotPasswordController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final RxBool isLoading = false.obs;
-  final ApiService apiService; // Use ApiService
-  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
-  RxBool isEmail = true.obs;
+  final ApiService apiService;
+  RxBool isEmail = true.obs; // This controls the input type (Email/Phone)
 
-  ForgotPasswordController({required this.apiService}); // Update the constructor
+  ForgotPasswordController({required this.apiService});
 
   Future<void> resetPassword() async {
+    // This method is now specifically for sending the OTP.
     final input = emailController.text.trim();
 
     if (isEmail.value) {
       if (!isValidEmail(input)) {
         Get.snackbar('Error', 'Please enter a valid email address.',
-            snackPosition: SnackPosition.BOTTOM);
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
         return;
       }
       isLoading.value = true;
       try {
-        await apiService.resetPasswordByEmail(input); // Use apiService
-        // Navigate to verification screen after successful email request
+        await apiService.sendOtpByEmail(input);
+        // Navigate to verification screen ONLY AFTER successful OTP send
         Get.toNamed(
           '/verification',
           arguments: {
             'isEmail': true,
-            'contact': input,
+            'contact': input, // Pass the email for verification
           },
         );
       } catch (e) {
+        // ApiService already shows a snackbar for errors, so no specific UI handling needed here,
+        // but we catch to ensure `isLoading` is reset.
+        print('Error in ForgotPasswordController.resetPassword: $e');
+      } finally {
         isLoading.value = false;
-        return;
       }
     } else {
+      // Phone number flow (currently disabled in ApiService, but left here for completeness)
       if (!isValidPhoneNumber(input)) {
         Get.snackbar('Error', 'Please enter a valid phone number (09xxxxxxxxx).',
-            snackPosition: SnackPosition.BOTTOM);
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
         return;
       }
       isLoading.value = true;
       try {
-        await apiService.resetPasswordByPhone(input); // Use apiService
-        // Navigate to verification screen after successful phone request
-        Get.toNamed(
-          '/verification',
-          arguments: {
-            'isEmail': false,
-            'contact': input,
-          },
-        );
+        // await apiService.sendOtpByPhone(input); // If you re-enable phone OTP
+        Get.snackbar('Info', 'Phone number reset is currently disabled.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.amber,
+            colorText: Colors.white);
       } catch (e) {
+        print('Error in ForgotPasswordController.resetPassword (phone): $e');
+      } finally {
         isLoading.value = false;
-        return;
       }
     }
-    isLoading.value = false;
   }
 
   bool isValidEmail(String email) {
-    final emailRegex =
-    RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     return emailRegex.hasMatch(email);
   }
 

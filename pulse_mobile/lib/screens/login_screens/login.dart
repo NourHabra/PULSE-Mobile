@@ -7,11 +7,54 @@ import 'package:pulse_mobile/widgets/custom_textfield.dart';
 import '../../widgets/appbar.dart';
 import '../../widgets/socialSignin.dart';
 
-class LoginPage extends GetView<LoginController> {
+// Change LoginPage from GetView to StatefulWidget
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  // 1. Declare TextEditingController instances here
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+
+  // 2. Get the LoginController instance for business logic
+  // Make sure your LoginBinding is correctly set up in app_pages.dart
+  final LoginController controller = Get.find<LoginController>();
+
+  @override
+  void initState() {
+    super.initState();
+    print('LoginPageState initState called');
+    // 3. Initialize TextEditingController instances
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+
+    // 4. If you had initial values in your LoginController for these fields,
+    // you could set them here. But it's better to keep them local.
+    // Example: _emailController.text = controller.someInitialEmailValue;
+
+    // Optional: If you need to observe changes in the TextField directly in the controller,
+    // you can add listeners here and update controller's Rx variables or internal state.
+    // _emailController.addListener(() {
+    //   // controller.updateEmailText(_emailController.text); // Example of updating controller
+    // });
+  }
+
+  @override
+  void dispose() {
+    print('LoginPageState dispose called');
+    // 5. Dispose the TextEditingController instances when the widget is disposed
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print('LoginPageState build called');
     return Scaffold(
       appBar: CustomAppBar(
         titleText: 'Login',
@@ -24,7 +67,8 @@ class LoginPage extends GetView<LoginController> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               child: CustomTextField(
-                controller: controller.emailController,
+                // 6. Assign the local controller here
+                controller: _emailController,
                 hintText: 'Enter your email',
                 prefixIcon: FeatherIcons.mail,
               ),
@@ -34,7 +78,8 @@ class LoginPage extends GetView<LoginController> {
               padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
               child: Obx(
                     () => CustomTextField(
-                  controller: controller.passwordController,
+                  // 7. Assign the local controller here
+                  controller: _passwordController,
                   hintText: 'Enter your password',
                   prefixIcon: FeatherIcons.lock,
                   suffixIcon: controller.isPasswordVisible.value
@@ -71,7 +116,13 @@ class LoginPage extends GetView<LoginController> {
                   child: ElevatedButton(
                     onPressed: controller.isLoading.value
                         ? null
-                        : controller.login, // Call the login method from the controller
+                        : () {
+                      // 8. Pass the text values to the LoginController's login method
+                      controller.loginWithCredentials(
+                        _emailController.text,
+                        _passwordController.text,
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 15.0),
                       shape: RoundedRectangleBorder(
@@ -112,50 +163,7 @@ class LoginPage extends GetView<LoginController> {
               ],
             ),
             const SizedBox(height: 20.0),
-            const Row(
-              children: <Widget>[
-                Expanded(
-                    child: Divider(
-                      color: AppLightModeColors.textFieldBorder,
-                    )),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Text(
-                    "OR",
-                    style: TextStyle(
-                      fontSize: 17,
-                      color: AppLightModeColors.icons,
-                    ),
-                  ),
-                ),
-                Expanded(
-                    child: Divider(
-                      color: AppLightModeColors.textFieldBorder,
-                    )),
-              ],
-            ),
-            const SizedBox(height: 25.0),
-            SocialSignInButton(
-              onPressed: controller.signInWithGoogle,
-              icon: Image.asset(
-                'assets/Google_Icon.webp',
-                height: 32.0,
-              ),
-              label: 'Sign in with Google',
-              iconPadding: const EdgeInsets.only(left: 15),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            SocialSignInButton(
-              onPressed: controller.signInWithApple,
-              icon: Image.asset(
-                'assets/Apple-Logo.png',
-                height: 24.0,
-              ),
-              label: 'Sign in with Apple',
-              iconPadding: const EdgeInsets.only(left: 20),
-            ),
+            
           ],
         ),
       ),

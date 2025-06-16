@@ -7,7 +7,7 @@ import '../../controllers/medications/PrescriptionList_controller.dart';
 import '../../theme/app_light_mode_colors.dart';
 import '../../widgets/appbar.dart';
 import '../../widgets/bottombar.dart';
-import '../../widgets/prescriptionsListItem.dart';
+import '../../widgets/prescriptionsListItem.dart'; // Ensure this widget exists and is correctly imported
 
 class PrescriptionsScreen extends StatelessWidget {
   final PrescriptionController _controller = Get.put(PrescriptionController());
@@ -49,9 +49,9 @@ class PrescriptionsScreen extends StatelessWidget {
                 } else if (_controller.errorMessage.isNotEmpty) {
                   return Center(child: Text(_controller.errorMessage.value));
                 } else if (_controller.prescriptions.isEmpty && _controller.searchQuery.isEmpty) {
-                  return const Center(child: Text('No prescriptions found.'));
+                  return const Center(child: Text('No prescriptions found.',style: TextStyle(color: AppLightModeColors.normalText),));
                 } else if (_controller.prescriptions.isEmpty && _controller.searchQuery.isNotEmpty) {
-                  return const Center(child: Text('No prescriptions match your search.'));
+                  return const Center(child: Text('No prescriptions match your search.',style: TextStyle(color: AppLightModeColors.normalText),));
                 } else {
                   final filteredPrescriptions = _controller.prescriptions.where((p) =>
                   p.doctorName.toLowerCase().contains(_controller.searchQuery.toLowerCase()) ||
@@ -60,15 +60,15 @@ class PrescriptionsScreen extends StatelessWidget {
                     itemCount: filteredPrescriptions.length,
                     itemBuilder: (context, index) {
                       final prescription = filteredPrescriptions[index];
+                      // Removed the InkWell here, as it's now handled inside Prescriptionslistitem
                       return Prescriptionslistitem(
                         prescriptionId: prescription.id,
                         name: prescription.doctorName,
                         speciality: prescription.doctorSpeciality,
-                        notes: prescription.notes, // Changed from untilDate to notes
+                        notes: prescription.notes,
                       );
                     },
                   );
-
                 }
               },
             ),

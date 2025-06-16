@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
-import '../models/medicalrecordlistitemsModel.dart'; // Make sure this path is correct
+// Ensure these paths are correct
+// import '../models/medicalrecordlistitemsModel.dart'; // No longer directly needed if passing specific strings
 import '../theme/app_light_mode_colors.dart'; // Make sure this path is correct
 
 class MedicalRecordListItem extends StatelessWidget {
-  final MedicalRecord record;
+  final String title;
+  final String subtitle;
+  final String imagePath; // Path to the asset image
   final VoidCallback onTap;
 
   const MedicalRecordListItem({
     Key? key,
-    required this.record,
+    required this.title,
+    required this.subtitle,
+    this.imagePath = 'assets/stethoscope_white.png', // Default image
     required this.onTap,
   }) : super(key: key);
 
@@ -49,7 +54,7 @@ class MedicalRecordListItem extends StatelessWidget {
                       width: 50.0, // Desired image width
                       height: 50.0, // Desired image height
                       child: Image.asset(
-                        'assets/stethoscope_white.png',
+                        imagePath, // Use the provided imagePath
                         fit: BoxFit.contain, // Use contain to ensure the whole image is visible
                       ),
                     ),
@@ -63,11 +68,11 @@ class MedicalRecordListItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        record.type,
+                        title, // Use the provided title
                         style: const TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: AppLightModeColors.normalText
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -75,7 +80,7 @@ class MedicalRecordListItem extends StatelessWidget {
                       const SizedBox(height: 4.0),
 
                       Text(
-                        record.recordDate,
+                        subtitle, // Use the provided subtitle (date or laboratory name)
                         style: TextStyle(
                           fontSize: 14.0,
                           color: AppLightModeColors.blueText,

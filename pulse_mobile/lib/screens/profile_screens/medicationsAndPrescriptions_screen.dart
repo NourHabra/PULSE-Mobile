@@ -36,6 +36,33 @@ class MedicationsAndPrescriptionsPage extends StatelessWidget {
                   Get.toNamed('/prescriptionHistory');
                 },
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                child: const Divider( // Moved Divider here
+                  color: AppLightModeColors.textFieldBorder,
+                  thickness: 1.0,
+                ),
+              ),
+              CustomListItem(
+                title: 'My Conditions',
+                onTap: () {
+                  Get.toNamed('/conditions');
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                child: const Divider( // Moved Divider here
+                  color: AppLightModeColors.textFieldBorder,
+                  thickness: 1.0,
+                ),
+              ),
+              CustomListItem(
+                title: 'My Allergies',
+                onTap: () {
+                  Get.toNamed('/allergies');
+                },
+              ),
+
 
             ],
           ),

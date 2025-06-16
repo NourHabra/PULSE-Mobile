@@ -1,3 +1,4 @@
+// lib/controllers/doctors/doctor_details_controller.dart (no change needed here)
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/mySavedDoctor_model.dart';
@@ -10,7 +11,7 @@ class DoctorDetailsController extends GetxController {
   RxBool isLoading = true.obs;
   RxString errorMessage = ''.obs;
 
-  RxString mapUrl = ''.obs;
+  RxString mapUrl = ''.obs; // This will hold the embed URL for the preview
   RxBool isMapLoading = false.obs;
   RxString mapErrorMessage = ''.obs;
 
@@ -41,7 +42,7 @@ class DoctorDetailsController extends GetxController {
     mapErrorMessage('');
     try {
       doctor.value = await _apiService.fetchDoctorDetails(doctorId);
-      mapUrl.value = await _apiService.fetchDoctorMapUrl(doctorId);
+      mapUrl.value = await _apiService.fetchDoctorMapUrl(doctorId); // This is for the embed preview
 
       // After fetching doctor details, immediately check its favorite status
       await checkIfDoctorIsFavorited(doctorId);

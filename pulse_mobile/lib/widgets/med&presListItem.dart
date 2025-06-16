@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_light_mode_colors.dart';
+
 class CustomListItem extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
@@ -17,7 +19,7 @@ class CustomListItem extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(fontSize: 18.0),
+              style: const TextStyle(fontSize: 18.0,color:AppLightModeColors.normalText),
             ),
             const Icon(Icons.arrow_forward_ios),
           ],

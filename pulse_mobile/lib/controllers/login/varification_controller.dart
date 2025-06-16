@@ -1,81 +1,107 @@
-// lib/controllers/verification_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../services/connections.dart'; // Import ApiService
+import '../../services/connections.dart'; // Ensure ApiService is correctly imported
 
 class VerificationController extends GetxController {
   final ApiService apiService;
-  final bool isEmail;
-  final String contact;
+
+  final RxBool _isEmail;
+  final String _contact; // The original contact (email/phone number)
+  final RxBool isLoading = false.obs;
+
+  // Use this for informational messages that CAN be shown on screen
+  final RxString infoMessage = ''.obs;
+
+  bool get isEmail => _isEmail.value;
+  String get contact => _contact;
 
   final List<TextEditingController> codeControllers = List.generate(
-    4,
+    6,
         (index) => TextEditingController(),
   );
-  final RxBool isLoading = false.obs;
+
   String get maskedContact {
-    if (isEmail) {
-      final email = contact;
+    if (_isEmail.value) {
+      final email = _contact;
       final atIndex = email.indexOf('@');
       if (atIndex > 3) {
         return email.replaceRange(3, atIndex, '*****');
       }
       return email;
+    }
+    // Simple masking for phone number (e.g., last 4 digits visible)
+    if (_contact.length > 4) {
+      return '******${_contact.substring(_contact.length - 4)}';
+    }
+    return _contact; // Fallback for very short numbers
+  }
+
+  VerificationController({required this.apiService, required bool isEmail, required String contact})
+      : _isEmail = isEmail.obs,
+        _contact = contact;
+
+  @override
+  void onInit() {
+    super.onInit();
+    print("VerificationController initialized with isEmail=${_isEmail.value}, contact=$_contact");
+  }
+
+  void onCodeChanged(String value, int index, BuildContext context) {
+    infoMessage.value = ''; // Clear any previous info message on code change
+    if (value.isNotEmpty) {
+      if (index < codeControllers.length - 1) {
+        FocusScope.of(context).nextFocus();
+      }
     } else {
-      if (contact.length > 6) {
-        return contact.replaceRange(6, contact.length - 3, '***');
-      }
-      return contact;
-    }
-  }
-
-  VerificationController({required this.apiService, required this.isEmail, required this.contact});
-
-
-  void deleteCode() {
-    for (var i = codeControllers.length - 1; i >= 0; i--) {
-      if (codeControllers[i].text.isNotEmpty) {
-        codeControllers[i].text = '';
-        update();
-        break;
+      if (index > 0) {
+        FocusScope.of(context).previousFocus();
       }
     }
   }
 
-  void onCodeChanged(String value, int index) {
-    if (value.length <= 1) {
-      codeControllers[index].text = value;
-      if (value.isNotEmpty && index < 3) {
-        //  implement focus nodes.
-      }
-      update();
-    }
-  }
-
-  Future<void> verifyCode() async {
+  Future<void> proceedToPasswordReset() async {
     final enteredCode = codeControllers.map((c) => c.text).join();
 
-    if (enteredCode.length != 4) {
-      Get.snackbar('Error', 'Please enter the complete code.',
-          snackPosition: SnackPosition.BOTTOM);
+    if (enteredCode.length != 6) {
+      Get.snackbar('Error', 'Please enter the complete 6-digit code.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
       return;
     }
 
     isLoading.value = true;
-    await Future.delayed(const Duration(seconds: 2));
-    isLoading.value = false;
-
-    if (enteredCode == '1234') {
-      Get.offNamed('/reset-new-password');
-    } else {
-      Get.snackbar('Error', 'Invalid verification code. Please try again.',
-          snackPosition: SnackPosition.BOTTOM);
-    }
+    // No direct API call here, just navigation with data.
+    // The actual password reset API call happens on the next screen.
+    Get.offNamed(
+      '/reset-new-password',
+      arguments: {
+        'email': _contact, // Pass the original contact (email)
+        'otp': enteredCode, // Pass the entered OTP
+      },
+    );
+    isLoading.value = false; // Reset loading state after navigation
   }
 
-  void resendCode() {
-    Get.snackbar('Code Resent', 'A new verification code has been sent.',
-        snackPosition: SnackPosition.BOTTOM);
+  Future<void> resendCode() async {
+    isLoading.value = true;
+    infoMessage.value = ''; // Clear any previous info message
+
+    try {
+      if (_isEmail.value) {
+        await apiService.sendOtpByEmail(_contact);
+        // This is an informational message, so we'll allow it on screen
+        infoMessage.value = 'A new verification code has been sent to your email.';
+      } else {
+        // This is an informational message, so we'll allow it on screen
+        infoMessage.value = 'Resending OTP to phone is currently disabled or not implemented.';
+      }
+    } catch (e) {
+      // ApiService already shows a snackbar for errors
+      print('Resend Code API Error: $e');
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   @override
@@ -85,8 +111,4 @@ class VerificationController extends GetxController {
     }
     super.onClose();
   }
-
-
-
 }
-

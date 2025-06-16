@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../theme/app_light_mode_colors.dart';
+
 class SavedDoctorsPage extends StatelessWidget {
   const SavedDoctorsPage({super.key});
 
@@ -19,8 +21,8 @@ class SavedDoctorsPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            Text('Category ID: $categoryId'),
-            Text('Saved Doctor IDs: $savedDoctorIds'),
+            Text('Category ID: $categoryId',style: TextStyle(color: AppLightModeColors.normalText),),
+            Text('Saved Doctor IDs: $savedDoctorIds',style: TextStyle(color: AppLightModeColors.normalText),),
             //  Display doctor details here
           ],
         ),

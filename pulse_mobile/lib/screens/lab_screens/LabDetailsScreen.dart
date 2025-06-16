@@ -102,6 +102,7 @@ class LabDetailsScreen extends StatelessWidget {
                                   style: const TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold,
+                                    color: AppLightModeColors.normalText,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
@@ -210,7 +211,7 @@ class LabDetailsScreen extends StatelessWidget {
                   const SizedBox(height: 30),
                   const Text(
                     'Working Hours',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,color: AppLightModeColors.normalText),
                   ),
                   const SizedBox(height: 15),
                   if (lab.workingHours != null && lab.workingHours!.isNotEmpty)

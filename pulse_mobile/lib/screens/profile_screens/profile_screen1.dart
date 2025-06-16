@@ -24,7 +24,7 @@ class ProfileScreen1 extends GetView<ProfileController> {
           } else if (controller.errorMessage.isNotEmpty) {
             return Center(child: Text(controller.errorMessage.value));
           } else if (controller.profile.value == null) {
-            return const Center(child: Text('No profile data available.'));
+            return const Center(child: Text('No profile data available.',style: TextStyle(color: AppLightModeColors.normalText),));
           } else {
             final profile = controller.profile.value!;
 

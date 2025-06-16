@@ -1,3 +1,4 @@
+// Your existing ForgotPasswordScreen code remains the same.
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
@@ -38,10 +39,10 @@ class ForgotPasswordScreen extends GetView<ForgotPasswordController> {
             ),
             const SizedBox(height: 30),
             // Segmented Control (Slider)
-            Container( // Added a Container
+            Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24), // Rounded corners for the whole slider
-                color: AppLightModeColors.textFieldBackground, // Blue background
+                borderRadius: BorderRadius.circular(24),
+                color: AppLightModeColors.textFieldBackground,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(2.0),
@@ -108,11 +109,11 @@ class ForgotPasswordScreen extends GetView<ForgotPasswordController> {
                   ],
                 )),
               ),
-            ), // Added the closing ),
+            ),
             const SizedBox(height: 30),
             // Input Field
             Obx(() => CustomTextField(
-              controller: controller.emailController, //  controller
+              controller: controller.emailController,
               hintText: controller.isEmail.value ? 'Email' : 'Phone Number',
               prefixIcon:
               controller.isEmail.value ? FeatherIcons.mail : FeatherIcons.phone,
@@ -139,10 +140,8 @@ class ForgotPasswordScreen extends GetView<ForgotPasswordController> {
                 TextStyle(fontSize: 18.0, color: Colors.white),
               ),
             )),
-
           ],
         ),
-
       ),
     );
   }

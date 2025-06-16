@@ -82,8 +82,7 @@ class MySavedDetailsController extends GetxController {
   }
 
   Future<void> removeSavedItem(dynamic itemToRemove) async {
-    // You pass the entire model object to removeSavedItem
-    // This allows you to check its type and call the correct API.
+
     int? idToRemove;
     String? itemName; // For snackbar message
 
@@ -93,16 +92,13 @@ class MySavedDetailsController extends GetxController {
       itemName = 'Doctor';
       print('Attempting to remove saved Doctor with ID: $idToRemove');
     } else if (itemToRemove is SavedLaboratoryModel) {
-      idToRemove = itemToRemove.id; // Assuming SavedLaboratoryModel has an 'id' property
+      idToRemove = itemToRemove.id;
       itemName = 'Laboratory';
       print('Attempting to remove saved Laboratory with ID: $idToRemove');
     } else if (itemToRemove is PharmacyModel) {
-      // For now, do nothing for Pharmacy as per your request
-      Get.snackbar('Info', 'Removing saved Pharmacies is not yet implemented.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.blueGrey,
-          colorText: Colors.white);
-      return; // Exit if it's a pharmacy
+      idToRemove = itemToRemove.id; // Use 'id' for PharmacyModel
+      itemName = 'Pharmacy';
+      print('Attempting to remove saved Pharmacy with ID: $idToRemove');
     } else {
       print('Unknown item type encountered for removal.');
       return; // Exit if item type is unknown
@@ -132,6 +128,8 @@ class MySavedDetailsController extends GetxController {
         else if (item is PharmacyModel) currentItemId = item.id; // Though not removed, keeping consistent
         return currentItemId == idToRemove;
       });
+
+
 
       Get.snackbar('Success', '$itemName removed from saved.',
         snackPosition: SnackPosition.BOTTOM,

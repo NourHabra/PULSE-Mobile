@@ -40,7 +40,7 @@ class RectangularCategoryItem extends StatelessWidget {
                     category.title,
                     style: const TextStyle(
                       fontSize: 20.0,
-                      color: Colors.black,
+                      color:AppLightModeColors.normalText,
                       fontWeight: FontWeight.w500,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -62,7 +62,8 @@ class RectangularCategoryItem extends StatelessWidget {
       return Icon(
         Icons.image_not_supported,
         color: AppLightModeColors.icons,
-        size: 60, // Match the Image.network size
+        size: 60,
+        // Match the Image.network size
       );
     }
 
@@ -77,6 +78,7 @@ class RectangularCategoryItem extends StatelessWidget {
             Icons.error,
             color: AppLightModeColors.icons,
             size: 60,
+
           );
         },
       );

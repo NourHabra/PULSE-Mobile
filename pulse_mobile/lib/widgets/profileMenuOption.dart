@@ -18,7 +18,7 @@ class MenuOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Determine the text and icon color based on the isRed parameter
-    final textColor = isRed ? Colors.red : const TextStyle().color; // Default text color
+    final textColor = isRed ? Colors.red : AppLightModeColors.normalText; // Default text color
     final iconColor = isRed ? Colors.red : AppLightModeColors.mainColor;
 
     return InkWell(

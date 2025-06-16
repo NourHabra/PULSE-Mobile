@@ -8,6 +8,6 @@ class AppLightModeColors {
   static const Color textFieldBackground = Color(0x47E5EAEE);
   static const Color textFieldBorder =  Color(0xFFE5E7EB);
   static const Color blueText= Color(0xFF639AC8);
-
+ static const Color normalText=Colors.black;
 // ... more colors ...
 }

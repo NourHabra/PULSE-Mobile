@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart'; // For better network image handling
+import 'package:cached_network_image/cached_network_image.dart';
+
+import '../theme/app_light_mode_colors.dart'; // For better network image handling
 
 class TestItemCard extends StatelessWidget {
   final String imageUrl;
@@ -57,6 +59,7 @@ class TestItemCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 12, // Initial font size for measurement
                         fontWeight: FontWeight.bold,
+                        color: AppLightModeColors.normalText,
                       ),
                     ),
                     textDirection: TextDirection.ltr, // Required for TextPainter
@@ -76,6 +79,7 @@ class TestItemCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: didOverflow ? 10 : 14, // Use 10 if overflow, else 12
                       fontWeight: FontWeight.bold,
+                      color: AppLightModeColors.normalText,
                     ),
                     maxLines: 1, // Still only one line
                     // Removed overflow: TextOverflow.ellipsis as per your request
@@ -91,15 +95,16 @@ class TestItemCard extends StatelessWidget {
                       text: priceNumber,
                       style: const TextStyle(
                         fontSize: 20, // Price number font size
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold, // Or bold if desired
+                        color: AppLightModeColors.normalText,
+                        fontWeight: FontWeight.bold,
+                        // Or bold if desired
                       ),
                     ),
                     TextSpan(
                       text: priceCurrency,
                       style: const TextStyle(
                         fontSize: 10, // SYP font size
-                        color: Colors.black,
+                        color:AppLightModeColors.normalText,
                         fontWeight: FontWeight.normal,
                       ),
                     ),

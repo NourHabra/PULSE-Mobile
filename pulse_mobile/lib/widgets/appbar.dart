@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 
+import '../theme/app_light_mode_colors.dart';
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String titleText;
   final VoidCallback? onLeadingPressed;
@@ -32,6 +34,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           style: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 20,
+            color: AppLightModeColors.normalText
           ),
         ),
         centerTitle: true,

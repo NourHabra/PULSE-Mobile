@@ -1,3 +1,4 @@
+// widgets/editProfile_textfield.dart
 import 'package:flutter/material.dart';
 import 'package:pulse_mobile/theme/app_light_mode_colors.dart';
 
@@ -6,13 +7,16 @@ class EditTextField extends StatefulWidget {
   final String suffixText;
   final ValueChanged<String>? onChanged;
   final bool obscureText;
+  final TextInputType keyboardType; // Added keyboardType parameter
 
   const EditTextField({
     super.key,
     required this.controller,
     required this.suffixText,
+
     this.onChanged,
     this.obscureText = false,
+    this.keyboardType = TextInputType.text, // Default to TextInputType.text
   });
 
   @override
@@ -20,28 +24,15 @@ class EditTextField extends StatefulWidget {
 }
 
 class _EditTextFieldState extends State<EditTextField> {
-  // Color _suffixTextColor =  AppLightModeColors.mainColor;
-
   @override
   void initState() {
     super.initState();
-    // _updateSuffixTextColor();
-    // widget.controller.addListener(_updateSuffixTextColor);
   }
 
   @override
   void dispose() {
-    // widget.controller.removeListener(_updateSuffixTextColor);
     super.dispose();
   }
-
-  // void _updateSuffixTextColor() {
-  //   setState(() {
-  //     _suffixTextColor = widget.controller.text.isNotEmpty
-  //         ? AppLightModeColors.mainColor
-  //         : AppLightModeColors.icons;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +53,7 @@ class _EditTextFieldState extends State<EditTextField> {
               child: TextField(
                 controller: widget.controller,
                 obscureText: widget.obscureText,
+                keyboardType: widget.keyboardType, // Pass keyboardType to the inner TextField
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                 ),
@@ -73,8 +65,7 @@ class _EditTextFieldState extends State<EditTextField> {
               child: Text(
                 widget.suffixText,
                 style: const TextStyle(
-                  color: AppLightModeColors
-                      .mainColor, // Made it always mainColor
+                  color: AppLightModeColors.mainColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -86,4 +77,3 @@ class _EditTextFieldState extends State<EditTextField> {
     );
   }
 }
-

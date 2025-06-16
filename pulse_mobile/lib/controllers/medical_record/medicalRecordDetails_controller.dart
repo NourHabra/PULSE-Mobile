@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import '../../models/medical_record_details_model.dart';
-import '../../services/connections.dart';
+import '../../services/connections.dart'; // Ensure this path is correct
 
 class MedicalRecordDetailsController extends GetxController {
   final ApiService _apiService = Get.find<ApiService>();
@@ -8,7 +8,7 @@ class MedicalRecordDetailsController extends GetxController {
   final RxBool isLoading = true.obs;
   final RxString errorMessage = ''.obs;
 
-  final int medicalRecordId; // To receive the ID from the previous screen
+  final int medicalRecordId;
 
   MedicalRecordDetailsController({required this.medicalRecordId});
 
@@ -22,6 +22,7 @@ class MedicalRecordDetailsController extends GetxController {
     try {
       isLoading(true);
       errorMessage('');
+      // Assuming getMedicalRecordDetails method in ApiService handles the API call and returns a parsed MedicalRecordDetails object
       final details = await _apiService.getMedicalRecordDetails(medicalRecordId);
       medicalRecordDetails.value = details;
     } catch (e) {

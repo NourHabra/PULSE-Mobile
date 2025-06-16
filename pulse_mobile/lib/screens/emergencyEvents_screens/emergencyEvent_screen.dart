@@ -59,10 +59,7 @@ class EmergencyEventsScreen extends StatelessWidget {
                   ? event.medicalRecordEntry!.timestamp.toLocal().toIso8601String().substring(0, 16).replaceFirst('T', ' ')
                   : 'N/A';
 
-              // Safely access emergency worker information
-              final String emergencyWorkerName = (event.emergencyWorker != null)
-                  ? '${event.emergencyWorker!.firstName} ${event.emergencyWorker!.lastName}'
-                  : 'N/A';
+
 
               return Container( // Changed from Card to Container
                 margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -87,17 +84,12 @@ class EmergencyEventsScreen extends StatelessWidget {
                     Row(
                       children: [
                         SizedBox(width: 10,),
-                        Text('Patient: $patientFullName', style: const TextStyle(fontSize: 18)),
+                        Text('Patient: $patientFullName', style: const TextStyle(fontSize: 18,color: AppLightModeColors.normalText)),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        SizedBox(width: 10,),
 
-                        Text('Emergency Worker: $emergencyWorkerName', style: const TextStyle(fontSize: 18)),
-                      ],
-                    ),
+
                     const SizedBox(height: 18),
                     Row(
                       children: [
@@ -115,7 +107,7 @@ class EmergencyEventsScreen extends StatelessWidget {
                         children: [
                           SizedBox(width: 10,),
 
-                          Text('Notes: ${event.notes}', style: const TextStyle(fontSize: 14)),
+                          Text('Notes: ${event.notes}', style: const TextStyle(fontSize: 14,color: AppLightModeColors.normalText)),
                         ],
                       ),
                     ],

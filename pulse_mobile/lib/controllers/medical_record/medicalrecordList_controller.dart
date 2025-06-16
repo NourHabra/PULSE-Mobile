@@ -1,65 +1,141 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart'; // Import for TextEditingController
-import '../../models/medicalrecordlistitemsModel.dart';
-import '../../services/connections.dart';
+import 'package:pulse_mobile/services/connections.dart';
+
+import '../../models/LabResultsModel.dart'; // This file now contains LabResultListItem
+import '../../models/medicalrecordlistitemsModel.dart'; // This is your MedicalRecord model
+
+enum FilterType { medicalEvents, labResults }
 
 class MedicalRecordController extends GetxController {
   final ApiService _apiService = Get.find<ApiService>();
 
   final RxList<MedicalRecord> medicalRecords = <MedicalRecord>[].obs;
+  // Change LabResult to LabResultListItem here:
+  final RxList<LabResultListItem> labResults = <LabResultListItem>[].obs; // New list for lab results
+
+  final RxList<dynamic> filteredItems = <dynamic>[].obs; // To hold either MedicalRecords or LabResultListItems
+  final RxString searchQuery = ''.obs;
+  final TextEditingController searchController = TextEditingController();
   final RxBool isLoading = true.obs;
   final RxString errorMessage = ''.obs;
 
-  final TextEditingController searchController = TextEditingController();
-  RxString searchQuery = ''.obs;
-  RxList<MedicalRecord> filteredMedicalRecords = <MedicalRecord>[].obs;
+  final Rx<FilterType> activeFilter = FilterType.medicalEvents.obs; // Default filter
+
 
   @override
   void onInit() {
     super.onInit();
-    fetchMedicalRecords();
-    ever<String>(searchQuery, (_) => _filterMedicalRecords());
+    fetchDataBasedOnFilter(activeFilter.value);
+    debounce(searchQuery, (_) => _filterItems(), time: const Duration(milliseconds: 300));
+    ever(activeFilter, (_) => fetchDataBasedOnFilter(activeFilter.value));
   }
 
+  void updateSearchQuery(String query) {
+    searchQuery.value = query;
+  }
 
-  Future<void> fetchMedicalRecords() async {
+  void setActiveFilter(FilterType filter) {
+    if (activeFilter.value != filter) {
+      activeFilter.value = filter;
+      searchQuery.value = '';
+      searchController.clear();
+    }
+  }
+
+  Future<void> fetchDataBasedOnFilter(FilterType filter) async {
+    isLoading(true);
+    errorMessage('');
     try {
-      isLoading(true);
-      errorMessage('');
-      final List<MedicalRecord> fetchedRecords = await _apiService.getMedicalRecords();
-      medicalRecords.assignAll(fetchedRecords);
-      filteredMedicalRecords.assignAll(fetchedRecords); // Initialize filtered list
+      if (filter == FilterType.medicalEvents) {
+        await fetchMedicalRecords();
+      } else { // FilterType.labResults
+        await fetchLabResults();
+      }
+      _filterItems();
     } catch (e) {
-      errorMessage('Failed to load medical records. Please try again. Error: $e');
-      print('Error in MedicalRecordController: $e');
+      errorMessage('Failed to load data: $e');
+      print('Error in MedicalRecordController.fetchDataBasedOnFilter: $e');
     } finally {
       isLoading(false);
     }
   }
 
-  Future<void> refreshMedicalRecords() async {
-    searchQuery.value = '';
-    searchController.clear();
-    await fetchMedicalRecords();
-  }
-
-  void updateSearchQuery(String value) {
-    searchQuery.value = value;
-  }
-
-  void _filterMedicalRecords() {
-    List<MedicalRecord> result = medicalRecords;
-
-    if (searchQuery.isNotEmpty) {
-      result = result.where((record) {
-        final query = searchQuery.value.toLowerCase();
-        // Check if type contains the query OR recordDate contains the query
-        return record.type.toLowerCase().contains(query) ||
-            record.recordDate.toLowerCase().contains(query);
-      }).toList();
+  Future<void> fetchMedicalRecords() async {
+    try {
+      isLoading(true);
+      errorMessage('');
+      final fetchedRecords = await _apiService.getMedicalRecords();
+      medicalRecords.assignAll(fetchedRecords);
+    } catch (e) {
+      errorMessage('Failed to load medical records: $e');
+      print('Error fetching medical records: $e');
+    } finally {
+      isLoading(false);
     }
+  }
 
-    filteredMedicalRecords.assignAll(result);
+  Future<void> fetchLabResults() async {
+    try {
+      isLoading(true);
+      errorMessage('');
+      // The _apiService.getLabResults() method now expects LabResultListItem
+      final fetchedResults = await _apiService.getLabResults();
+      labResults.assignAll(fetchedResults);
+    } catch (e) {
+      errorMessage('Failed to load lab results: $e');
+      print('Error fetching lab results: $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  void _filterItems() {
+    String query = searchQuery.value.toLowerCase();
+    if (activeFilter.value == FilterType.medicalEvents) {
+      if (query.isEmpty) {
+        filteredItems.assignAll(medicalRecords.where((record) => !record.hasLabResult).toList());
+      } else {
+        filteredItems.assignAll(
+          medicalRecords.where((record) =>
+          !record.hasLabResult &&
+              (record.type.toLowerCase().contains(query) ||
+                  record.recordDate.toLowerCase().contains(query))
+          ).toList(),
+        );
+      }
+    } else { // FilterType.labResults
+      if (query.isEmpty) {
+        filteredItems.assignAll(labResults);
+      } else {
+        filteredItems.assignAll(
+          // Use LabResultListItem fields for filtering
+          labResults.where((result) =>
+          result.testName.toLowerCase().contains(query) ||
+              result.formattedDate.toLowerCase().contains(query) ||
+              (result.laboratory?.name?.toLowerCase().contains(query) ?? false) // Add laboratory name search
+          ).toList(),
+        );
+      }
+    }
+  }
+
+  Future<void> refreshMedicalRecords() async {
+    await fetchMedicalRecords();
+    _filterItems();
+  }
+
+  Future<void> refreshLabResults() async {
+    await fetchLabResults();
+    _filterItems();
+  }
+
+  Future<void> refreshCurrentList() async {
+    if (activeFilter.value == FilterType.medicalEvents) {
+      await refreshMedicalRecords();
+    } else {
+      await refreshLabResults();
+    }
   }
 
   @override

@@ -50,9 +50,10 @@ class Prescriptionslistitem extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color:AppLightModeColors.normalText,
                     ),
                   ),
+                  SizedBox(height: 5,),
                   Text(
                     speciality,
                     style: const TextStyle(
@@ -61,6 +62,7 @@ class Prescriptionslistitem extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                  SizedBox(height: 5,),
                   Row(
                     children: [
                       const Text(

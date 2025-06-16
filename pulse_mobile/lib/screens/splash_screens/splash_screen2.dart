@@ -74,15 +74,7 @@ class _Splash2State extends State<Splash2> {
             ],
           ),
           // Skip Button
-          Positioned(
-            top: 30,
-            right: 25,
-            child: SkipButton(
-              onPressed: () {
-                Get.offNamed('/splash3');
-              },
-            ),
-          ),
+
         ],
       ),
     );

@@ -85,7 +85,7 @@ class FirstDoctorScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: AppLightModeColors.normalText,
                   ),
                 ),
                 const SizedBox(height: 10), // Add some spacing between the title and the list

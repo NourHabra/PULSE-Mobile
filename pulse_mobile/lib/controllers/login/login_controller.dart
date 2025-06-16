@@ -1,38 +1,32 @@
+// lib/controllers/login/login_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pulse_mobile/services/connections.dart'; // Import the merged ApiService
+import 'package:pulse_mobile/services/connections.dart';
 
 class LoginController extends GetxController {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+
   final RxBool isLoading = false.obs;
   final RxBool isPasswordVisible = false.obs;
 
   final ApiService apiService;
 
   LoginController(this.apiService);
-
+////walid.busi2444@gmail.com
   @override
   void onInit() {
     super.onInit();
-
   }
-/*
-*  "email": "walid.busi2444@gmail.com",
-  "password": "healthy123"*/
+
   bool isValidEmail(String email) {
     final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     return emailRegex.hasMatch(email);
   }
 
   bool isValidPassword(String password) {
-    return password.length >= 10 && password.contains(RegExp(r'[0-9]')); // number check
+    return password.length >= 5 && password.contains(RegExp(r'[0-9]'));
   }
 
-  Future<void> login() async {
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
-
+  Future<void> loginWithCredentials(String email, String password) async {
     if (!isValidEmail(email)) {
       Get.snackbar(
         'Error',
@@ -55,10 +49,11 @@ class LoginController extends GetxController {
     try {
       final bool isLoggedIn = await apiService.login(email, password);
       isLoading.value = false;
-      print('ApiService.login() returned: $isLoggedIn'); // Add this line
+      print('ApiService.login() returned: $isLoggedIn');
       if (isLoggedIn) {
-        Get.offAllNamed('/home1');
-        print('Login successful, navigating to /home1');
+        // Pass 'email' instead of 'contact' to the 2FA screen
+        Get.offNamed('/two-factor', arguments: {'email': email, 'isEmail': true}); // Changed key to 'email'
+        print('Login successful, navigating to /two-factor');
       } else {
         Get.snackbar(
           'Error',
@@ -86,7 +81,6 @@ class LoginController extends GetxController {
   void goToSignUp() {
     Get.toNamed('/signup1');
     print('Navigating to Sign Up');
-
   }
 
   void forgotPassword() {
@@ -109,8 +103,7 @@ class LoginController extends GetxController {
 
   @override
   void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
+    print('LoginController onClose called');
     super.onClose();
   }
 }

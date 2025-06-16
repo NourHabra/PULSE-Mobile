@@ -1,13 +1,16 @@
+// lib/controllers/home1_controller.dart
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../../services/connections.dart';
 import '../../models/categoryModel.dart';
 import '../models/doctor_model_featured_homepage.dart';
-import '../models/vitals_model.dart'; // Import for Icons
+import '../models/vitals_model.dart';
+import '../services/Stom_service.dart'; // Import for Icons
 
 class HomeController extends GetxController {
   final ApiService apiService = Get.find<ApiService>();
+  final StompService stompService = Get.find<StompService>(); // Get instance of StompService
 
   // Reactive variables for main categories
   final RxList<Category> mainCategories = <Category>[].obs;
@@ -30,6 +33,7 @@ class HomeController extends GetxController {
     fetchMainCategories();
     fetchPatientVitals();
     fetchFeaturedDoctors();
+    stompService.connect();
   }
 
   // Fetch main categories
@@ -49,21 +53,26 @@ class HomeController extends GetxController {
         mainCategoriesErrorMessage.value = 'An unexpected error occurred';
       }
       mainCategories.clear();
+      // Consider if adding an 'Error' category here is truly what you want for UI.
+      // Often, just showing the error message is enough.
       mainCategories.add(Category(id: 0, title: 'Error', imageUrl: ''));
       print('Error fetching main categories: $error');
     }
   }
 
+  // --- Start: Modified fetchPatientVitals method ---
   Future<void> fetchPatientVitals() async {
     loadingVitals.value = true;
     vitalsErrorMessage.value = '';
     try {
       final vitalsData = await apiService.getPatientVitals(); // Now returns List<Vital>?
-      if (vitalsData != null) {
+
+      if (vitalsData != null && vitalsData.isNotEmpty) {
         vitalsList.assignAll(vitalsData); // Assign the list of Vital objects
       } else {
-        vitalsErrorMessage.value = 'No Vitals Data';
-        vitalsList.clear();
+        // If API returns null or an empty list, set default vitals
+        vitalsList.assignAll(_createDefaultVitals());
+        vitalsErrorMessage.value = 'No recent vitals data. Displaying defaults.'; // Informative message
       }
       loadingVitals.value = false;
     } catch (error) {
@@ -73,9 +82,61 @@ class HomeController extends GetxController {
       } else {
         vitalsErrorMessage.value = 'An unexpected error occurred';
       }
+      // If there's an error, still display default vitals
+      vitalsList.assignAll(_createDefaultVitals());
       print('Error fetching patient vitals: $error');
     }
   }
+
+  List<Vital> _createDefaultVitals() {
+    final now = DateTime.now();
+    return [
+
+      Vital(
+        id: 0,
+        patientId: 0, // Placeholder
+        vitalId: 2,   // Placeholder for Heart Rate
+        name: 'Heart Rate',
+        description: 'Heart beats per minute', // Placeholder
+        normalValue: '60-100 bpm', // Placeholder
+        measurement: '0 bpm',
+        timestamp: now,
+      ),
+      Vital(
+        id: 0,
+        patientId: 0, // Placeholder
+        vitalId: 3,   // Placeholder for Blood Pressure
+        name: 'Blood Pressure',
+        description: 'Systolic/Diastolic blood pressure', // Placeholder
+        normalValue: '120/80 mmHg', // Placeholder
+        measurement: '0/0 mmHg',
+        timestamp: now,
+      ),
+      Vital(
+        id: 0,
+        patientId: 0, // Placeholder
+        vitalId: 4,   // Placeholder for Oxygen Saturation
+        name: 'Oxygen Saturation',
+        description: 'Oxygen level in blood', // Placeholder
+        normalValue: '95-100%', // Placeholder
+        measurement: '0%',
+        timestamp: now,
+      ),
+      Vital(
+        id: 0,
+        patientId: 0, // Placeholder
+        vitalId: 5,   // Placeholder for Blood Sugar
+        name: 'Blood Sugar',
+        description: 'Glucose level in blood', // Placeholder
+        normalValue: '70-100 mg/dL (fasting)', // Placeholder
+        measurement: '0 mg/dL',
+        timestamp: now,
+      ),
+
+    ];
+  }
+  // --- End: Modified fetchPatientVitals method ---
+
 
   Future<void> fetchFeaturedDoctors() async {
     loadingFeaturedDoctors.value = true;
@@ -124,18 +185,18 @@ class HomeController extends GetxController {
       return Icons.healing; // Or a default icon.
     }
     switch (vitalName.toLowerCase()) {
-      case 'temperature':
-        return Icons.thermostat;
+      case 'temperature': // Added temperature icon
+        return FeatherIcons.thermometer;
       case 'heart rate':
         return FeatherIcons.heart;
       case 'blood pressure':
         return FeatherIcons.activity;
       case 'oxygen saturation':
-        return FeatherIcons.droplet; // Changed to droplet for oxygen
+        return FeatherIcons.droplet;
       case 'blood sugar':
-        return FeatherIcons.box; // Changed to box for blood sugar
+        return FeatherIcons.box;
       default:
-        return Icons.healing; // Default icon
+        return Icons.healing;
     }
   }
 }

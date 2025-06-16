@@ -1,3 +1,5 @@
+// lib/controllers/doctor_firstpage_controller.dart
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../models/generalDoctorModel.dart';
@@ -24,14 +26,16 @@ class DoctorFirstpageController extends GetxController {
   RxList<GeneralDoctor> filteredDoctors = <GeneralDoctor>[].obs;
 
   // Filter Functionality
-  RxString selectedFilter = ''.obs; // Add this line
-  final List<Map<String, String>> filterCategories = [  // Add this
-    {'d_id': '101', 'name': 'Cardiologists', 'icon': 'assets/cardiology_600dp.png'},
-    {'d_id': '102', 'name': 'Dermatologists', 'icon': 'assets/accessibility_600dp.png'},
-    {'d_id': '103', 'name': 'Pediatricians', 'icon': 'assets/child_friendly_600dp.png'},
-    {'d_id': '104', 'name': 'Neurologists', 'icon': 'assets/neurology_600dp_.png'},
+  RxString selectedFilter = ''.obs;
+  // --- MODIFIED: filterCategories names to match specialization ---
+  final List<Map<String, String>> filterCategories = [
+    {'d_id': '101', 'name': 'Cardiology', 'icon': 'assets/cardiology_600dp.png'},
+    {'d_id': '102', 'name': 'Dermatology', 'icon': 'assets/accessibility_600dp.png'},
+    {'d_id': '103', 'name': 'Pediatrics', 'icon': 'assets/child_friendly_600dp.png'},
+    {'d_id': '104', 'name': 'Neurology', 'icon': 'assets/neurology_600dp_.png'},
     {'d_id': '105', 'name': 'Internal Medicine', 'icon': 'assets/gastroenterology_600dp.png'},
   ];
+  // --- END MODIFIED ---
 
   @override
   void onInit() {
@@ -39,7 +43,7 @@ class DoctorFirstpageController extends GetxController {
     fetchFeaturedDoctors();
     fetchAllDoctors();
     ever<String>(searchQuery, _filterDoctors);
-    ever<String>(selectedFilter, _filterDoctors); // Listen to changes in selectedFilter
+    ever<String>(selectedFilter, _filterDoctors);
   }
 
   Future<void> fetchFeaturedDoctors() async {
@@ -64,7 +68,7 @@ class DoctorFirstpageController extends GetxController {
           .map((json) => GeneralDoctor.fromJson(json as Map<String, dynamic>))
           .toList();
       _allDoctors.assignAll(fetchedDoctors);
-      filteredDoctors.assignAll(fetchedDoctors);
+      _filterDoctors(searchQuery.value);
     } catch (e) {
       allDoctorsErrorMessage('Failed to load doctors: $e');
       _allDoctors.clear();
@@ -78,32 +82,43 @@ class DoctorFirstpageController extends GetxController {
     searchQuery.value = value;
   }
 
-  void updateSelectedFilter(String value) { // Add this
+  void updateSelectedFilter(String value) {
     selectedFilter.value = value;
   }
 
-  void _filterDoctors(String query) { // Modified
+  void _filterDoctors(String? _) {
     List<GeneralDoctor> result = _allDoctors;
 
-    if (query.isNotEmpty) {
-      result = result.where((doctor) =>
-      doctor.fullName.toLowerCase().contains(query.toLowerCase()) ||
-          (doctor.specialization?.toLowerCase().contains(query.toLowerCase()) ?? false)).toList();
+    final String lowerCaseQuery = searchQuery.value.toLowerCase();
+    final String lowerCaseFilter = selectedFilter.value.toLowerCase();
+
+    // Apply search query filter if not empty
+    if (lowerCaseQuery.isNotEmpty) {
+      result = result.where((doctor) {
+        final bool matchesName = doctor.fullName.toLowerCase().contains(lowerCaseQuery);
+        final bool matchesSpecialization = (doctor.specialization?.toLowerCase().contains(lowerCaseQuery) ?? false);
+        final bool matchesAddress = (doctor.address?.toLowerCase().contains(lowerCaseQuery) ?? false);
+
+        return matchesName || matchesSpecialization || matchesAddress;
+      }).toList();
     }
 
-    if (selectedFilter.isNotEmpty) {
+    // Apply category filter if not empty
+    if (lowerCaseFilter.isNotEmpty) {
       result = result.where((doctor) =>
-      doctor.specialization?.toLowerCase() == selectedFilter.toLowerCase()).toList();
+      (doctor.specialization?.toLowerCase() == lowerCaseFilter)
+      ).toList();
     }
 
     filteredDoctors.assignAll(result);
   }
 
+
   @override
   void onClose() {
     searchController.dispose();
-    searchQuery.value = ''; // Clear the search query
-    selectedFilter.value = ''; // Clear the selected filter.
+    searchQuery.value = '';
+    selectedFilter.value = '';
     super.onClose();
   }
 }

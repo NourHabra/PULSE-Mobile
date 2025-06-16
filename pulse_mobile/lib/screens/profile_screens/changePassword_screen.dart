@@ -33,6 +33,7 @@ class ChangePasswordPage extends GetView<ChangePasswordController> {
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w800,
+                  color: AppLightModeColors.normalText
                 ),
                 textAlign: TextAlign.start,
               ),

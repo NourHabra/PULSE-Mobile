@@ -18,18 +18,8 @@ class SplashController extends GetxController {
     final authToken = await _secureStorage.read(key: 'authToken');
 
     if (authToken != null && authToken.isNotEmpty) {
-      // Optional: Validate the token with the backend
-      // try {
-      //   final isValid = await _authService.validateToken(authToken);
-      //   if (isValid) {
-      //     Get.offAllNamed(AppRoutes.HOME);
-      //   } else {
-      //     Get.offAllNamed(AppRoutes.LOGIN);
-      //   }
-      // } catch (e) {
-      //   Get.offAllNamed(AppRoutes.LOGIN); // Handle potential errors
-      // }
-      Get.offAllNamed('/home'); // For simplicity, navigate if token exists
+
+      Get.offAllNamed('/home');
     } else {
       Get.offAllNamed('/login');
     }

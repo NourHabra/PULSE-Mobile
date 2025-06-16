@@ -42,7 +42,7 @@ class EmergencyButton extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.min, // Ensure row takes minimum space
             children: [
               if (icon != null)
                 Icon(
@@ -51,12 +51,16 @@ class EmergencyButton extends StatelessWidget {
                   size: 45,
                 ),
               const SizedBox(width: 10),
-              Text(
-                text,
-                style: TextStyle(
-                  color: textColor,
-
-                  fontSize: 18,
+              // Added Flexible and TextOverflow for responsiveness
+              Flexible(
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 18,
+                  ),
+                  overflow: TextOverflow.ellipsis, // Truncate long text with "..."
+                  maxLines: 1, // Ensure text stays on a single line
                 ),
               ),
               const SizedBox(width: 10),
