@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:pulse_mobile/services/connections.dart';
 
-import '../../models/LabResultDeatils.dart'; // Make sure this path is correct
+import '../../models/LabResultDeatils.dart';
 
 class LabResultDetailsController extends GetxController {
   final ApiService _apiService = Get.find<ApiService>();

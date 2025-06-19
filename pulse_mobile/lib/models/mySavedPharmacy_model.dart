@@ -1,12 +1,11 @@
-// lib/models/mySavedPharmacy_model.dart (or wherever PharmacyModel is defined)
-import 'package:get/get.dart'; // Import Get for dependency injection
-import 'package:pulse_mobile/services/connections.dart'; // Import your ApiService
+import 'package:get/get.dart';
+import 'package:pulse_mobile/services/connections.dart';
 
 class PharmacyModel {
   final int id;
   final String name;
   final String address;
-  final String? pictureUrl; // Keep this as nullable, as the raw URL might be null
+  final String? pictureUrl;
 
   PharmacyModel({
     required this.id,
@@ -24,7 +23,7 @@ class PharmacyModel {
     final apiService = Get.find<ApiService>();
 
     const String oldBase = 'https://localhost:8443'; // The old base URL from the backend
-    final String newBase = apiService.baseUrl; // The new base URL from your ApiService
+    final String newBase = apiService.baseUrl;
 
     String? rawPictureUrl = pharmacyData['pictureUrl'] as String?; // Get the pictureUrl from pharmacyData
 

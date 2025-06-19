@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart'; // Import for snackbar colors
 import 'package:get/get.dart';
-import '../../models/pharmacy.dart'; // Import your PharmacylistModel (assuming this is the detailed Pharmacy model)
-import '../../services/connections.dart'; // Ensure ApiService is available
-import '../../models/mySavedPharmacy_model.dart'; // Import your PharmacyModel for checking saved status
+import '../../models/pharmacy.dart';
+import '../../services/connections.dart';
+import '../../models/mySavedPharmacy_model.dart';
 
 class PharmacyDetailsController extends GetxController {
   final ApiService _apiService = Get.find<ApiService>();
@@ -17,42 +17,36 @@ class PharmacyDetailsController extends GetxController {
   final RxBool isMapLoading = false.obs;
   final RxString mapErrorMessage = ''.obs;
 
-  final RxBool isFavorited = false.obs; // NEW: Observable for favorite status
-
-  // NEW: Method to check if the current pharmacy is favorited
+  final RxBool isFavorited = false.obs;
   Future<void> checkIfPharmacyIsFavorited(int pharmacyId) async {
     try {
       final List<PharmacyModel>? savedPharmacies = await _apiService.getSavedPharmacies();
       if (savedPharmacies != null) {
-        // Compare pharmacyId with the 'id' of pharmacies in the saved list
-        // Assuming PharmacyModel's 'id' property represents the pharmacy's ID
         isFavorited.value = savedPharmacies.any((savedPharmacy) => savedPharmacy.id == pharmacyId);
         print('Pharmacy ID $pharmacyId is favorited: ${isFavorited.value}');
       } else {
-        isFavorited.value = false; // No saved pharmacies or error fetching, so not favorited
+        isFavorited.value = false;
         print('No saved pharmacies found or error fetching saved pharmacies.');
       }
     } catch (e) {
       print('Error checking if pharmacy is favorited: $e');
-      isFavorited.value = false; // Default to false on error
+      isFavorited.value = false;
     }
   }
 
   Future<void> fetchPharmacyDetails(int pharmacyId) async {
     isLoading(true);
     errorMessage('');
-    isMapLoading(true); // Set map loading to true
-    mapErrorMessage(''); // Clear any previous map errors
+    isMapLoading(true);
+    mapErrorMessage('');
 
     try {
       final fetchedPharmacy = await _apiService.fetchPharmacyDetails(pharmacyId);
       pharmacy.value = fetchedPharmacy;
 
-      // Fetch the map URL using the new API call
       final fetchedMapUrl = await _apiService.fetchPharmacyMapUrl(pharmacyId);
       mapUrl.value = fetchedMapUrl;
 
-      // NEW: After fetching pharmacy details, immediately check its favorite status
       await checkIfPharmacyIsFavorited(pharmacyId);
 
     } catch (e) {
@@ -73,7 +67,6 @@ class PharmacyDetailsController extends GetxController {
     }
   }
 
-  // NEW: Toggle Favorite Status for Pharmacies
   Future<void> toggleFavoriteStatus(int pharmacyId) async {
     if (isLoading.value) {
       return; // Prevent multiple rapid clicks while details are loading

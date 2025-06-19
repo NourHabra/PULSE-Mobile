@@ -89,7 +89,6 @@ class MedicalRecordEntry {
   });
 
   factory MedicalRecordEntry.fromJson(Map<String, dynamic> json) {
-    // Assuming timestamp is a list of integers [year, month, day, hour, minute]
     final List<dynamic> ts = json['timestamp'];
     return MedicalRecordEntry(
       medicalRecordEntryId: json['medicalRecordEntryId'],

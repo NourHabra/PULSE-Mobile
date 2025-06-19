@@ -1,4 +1,3 @@
-// lib/controllers/doctors/doctor_details_controller.dart (no change needed here)
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/mySavedDoctor_model.dart';
@@ -11,18 +10,16 @@ class DoctorDetailsController extends GetxController {
   RxBool isLoading = true.obs;
   RxString errorMessage = ''.obs;
 
-  RxString mapUrl = ''.obs; // This will hold the embed URL for the preview
+  RxString mapUrl = ''.obs;
   RxBool isMapLoading = false.obs;
   RxString mapErrorMessage = ''.obs;
 
-  RxBool isFavorited = false.obs; // Observable for favorite status
+  RxBool isFavorited = false.obs;
 
-  // New method to check if the current doctor is favorited
   Future<void> checkIfDoctorIsFavorited(int doctorId) async {
     try {
       final List<SavedDoctorModel>? savedDoctors = await _apiService.getSavedDoctors();
       if (savedDoctors != null) {
-        // IMPORTANT: Compare doctorId with savedDoctor.doctorUserId
         isFavorited.value = savedDoctors.any((savedDoctor) => savedDoctor.doctorUserId == doctorId);
         print('Doctor ID $doctorId is favorited: ${isFavorited.value}');
       } else {
@@ -72,13 +69,11 @@ class DoctorDetailsController extends GetxController {
     print('Attempting to ${isFavorited.value ? 'save' : 'unsave'} doctor with ID: $doctorId');
 
     try {
-      // You need a specific API call for saving/unsaving.
-      // If your backend handles `saveDoctor` as a toggle, then this is fine.
-      // If you need separate endpoints for saving and unsaving, you'd do:
+
       if (willBeFavorited) {
-        await _apiService.saveDoctor(doctorId); // Assuming this is your save endpoint
+        await _apiService.saveDoctor(doctorId);
       } else {
-        await _apiService.removeSavedDoctor(doctorId); // You'll need to add this method to ApiService
+        await _apiService.removeSavedDoctor(doctorId);
       }
 
       Get.snackbar(
@@ -89,7 +84,6 @@ class DoctorDetailsController extends GetxController {
         colorText: Get.theme.snackBarTheme.actionTextColor ?? Colors.white,
       );
     } catch (e) {
-      // Revert optimistic update on error
       isFavorited.value = !willBeFavorited;
       errorMessage(e.toString());
       Get.snackbar(

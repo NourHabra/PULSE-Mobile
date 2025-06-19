@@ -37,7 +37,7 @@ class LabCard extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
                   child: Image.asset(
-                    'assets/lab.jpg', // Replace with your actual asset path
+                    'assets/lab.jpg',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) =>
                     const Icon(Icons.error),

@@ -76,19 +76,14 @@ class EditProfileController extends GetxController {
       return;
     }
 
-    // Create a Profile object containing only the fields intended for the 'dto' part.
-    // The pictureUrl here is not used for the multipart file upload itself,
-    // but the backend might expect it to remain if the image wasn't changed.
+
     final profileDataForDto = Profile(
       bloodType: bloodTypeController.text.isNotEmpty ? bloodTypeController.text : null,
       weight: double.tryParse(weightController.text),
       height: double.tryParse(heightController.text),
-      // If other fields like firstName, lastName, etc. are part of the update DTO,
-      // you would also include them here from their respective controllers/initial values.
-      // For now, based on Postman, only bloodType, weight, height are in 'dto'.
+
     );
 
-    // Get the file to be uploaded, if one was selected
     File? fileToUpload;
     if (_selectedImageFile.value != null) {
       fileToUpload = File(_selectedImageFile.value!.path);
@@ -98,11 +93,10 @@ class EditProfileController extends GetxController {
       await apiService.updateUserProfile(profileDataForDto, newProfilePicture: fileToUpload);
       Get.snackbar('Success', 'Profile updated successfully!');
 
-      // After successful update, reload profile to get latest data from backend,
-      // including the new pictureUrl if it was updated on the server.
-      await loadUserProfile(); // This will refresh the profile.value and display new image
 
-      _selectedImageFile.value = null; // Clear selected image after successful save
+      await loadUserProfile();
+
+      _selectedImageFile.value = null;
     } catch (e) {
       errorMessage.value = e.toString();
       Get.snackbar('Error', 'Failed to save profile: $e');

@@ -5,14 +5,14 @@ class SavedLaboratoryModel {
   final int laboratoryId; // The ID of the laboratory (crucial for comparison)
   final String? name;
   final String? address;
-  final String? pictureUrl; // NEW: Added pictureUrl field
+  final String? pictureUrl;
 
   SavedLaboratoryModel({
     required this.savedLaboratoryEntryId,
     required this.laboratoryId,
     this.name,
     this.address,
-    this.pictureUrl, // NEW: Include in constructor
+    this.pictureUrl,
   });
 
   factory SavedLaboratoryModel.fromJson(Map<String, dynamic> json) {
@@ -23,11 +23,11 @@ class SavedLaboratoryModel {
       laboratoryId: labJson['laboratoryId'] as int,
       name: labJson['name'] as String?,
       address: labJson['address'] as String?,
-      // NEW: Assign your asset path here
+
       pictureUrl: 'assets/lab.jpg',
     );
   }
 
-  // This getter allows 'item.id' to work for SavedLaboratoryModel
+
   int get id => laboratoryId;
 }

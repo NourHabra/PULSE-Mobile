@@ -8,7 +8,6 @@ class AllergiesController extends GetxController {
 
   // Observable list of AllergyModel objects
   final RxList<AllergyModel> allergies = <AllergyModel>[].obs;
-  // Observable boolean to indicate if data is currently being loaded
   final RxBool isLoading = true.obs;
   // Observable string to store any error messages
   final RxString errorMessage = ''.obs;
@@ -16,7 +15,6 @@ class AllergiesController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Fetch allergies when the controller is initialized
     fetchAllergies();
   }
 

@@ -10,7 +10,7 @@ import 'connections.dart';
 class StompService extends GetxService {
   final ApiService _apiService = Get.find<ApiService>();
   StompClient? _stompClient;
-  final String _webSocketUrl = 'wss://192.168.210.222:8443/ws/websocket';
+  final String _webSocketUrl = 'wss://192.168.153.1:8443/ws/websocket';
 
   final RxList<ConsentRequest> _consentHistory = <ConsentRequest>[].obs;
   RxList<ConsentRequest> get consentHistory => _consentHistory;

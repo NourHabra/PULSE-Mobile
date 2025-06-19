@@ -1,17 +1,15 @@
 import 'package:get/get.dart';
-import 'package:pulse_mobile/services/connections.dart'; // Ensure ApiService is correctly imported
-import 'package:pulse_mobile/models/prescription_details.dart'; // Ensure PrescriptionDetailsInfo is correctly imported
+import 'package:pulse_mobile/services/connections.dart';
+import 'package:pulse_mobile/models/prescription_details.dart';
 
 class PrescriptionDetailsController extends GetxController {
-  // Make apiService a final field initialized via the constructor
-  final ApiService apiService; // This field will hold the injected ApiService instance
+  final ApiService apiService;
 
   var prescription = Rx<PrescriptionDetailsInfo?>(null);
   var isLoading = true.obs;
   var hasError = false.obs;
 
-  // Define a constructor that takes ApiService as a required named parameter
-  PrescriptionDetailsController({required this.apiService}); // <--- THIS IS THE CRUCIAL CHANGE
+  PrescriptionDetailsController({required this.apiService});
 
   @override
   void onInit() {

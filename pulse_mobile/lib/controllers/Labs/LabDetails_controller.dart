@@ -1,10 +1,10 @@
 // lib/controllers/Labs/LabDetails_controller.dart
-import 'package:flutter/material.dart'; // Import for snackbar colors
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../models/LabModel.dart';
 import '../../models/labTestModel.dart';
-import '../../models/mySavedLab_model.dart'; // Import your SavedLaboratoryModel
+import '../../models/mySavedLab_model.dart';
 import '../../services/connections.dart';
 
 class LabDetailsController extends GetxController {
@@ -17,14 +17,13 @@ class LabDetailsController extends GetxController {
   RxBool isTestsLoading = true.obs; // New: Loading state for tests
   RxString testsErrorMessage = ''.obs; // New: Error message for tests
 
-  RxBool isFavorited = false.obs; // NEW: Observable for favorite status
+  RxBool isFavorited = false.obs;
 
   // NEW: Method to check if the current lab is favorited
   Future<void> checkIfLabIsFavorited(int labId) async {
     try {
       final List<SavedLaboratoryModel>? savedLabs = await _apiService.getSavedLaboratories();
       if (savedLabs != null) {
-        // IMPORTANT: Compare labId with savedLab.id (assuming 'id' getter in SavedLaboratoryModel returns laboratoryId)
         isFavorited.value = savedLabs.any((savedLab) => savedLab.laboratoryId == labId);
         print('Lab ID $labId is favorited: ${isFavorited.value}');
       } else {
@@ -49,7 +48,6 @@ class LabDetailsController extends GetxController {
       mapEmbedUrl.value = await _apiService.fetchLabEmbedCoordinates(labId);
       labTests.assignAll(await _apiService.fetchLabTests(labId));
 
-      // NEW: After fetching lab details, immediately check its favorite status
       await checkIfLabIsFavorited(labId);
 
     } catch (e) {

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pulse_mobile/services/connections.dart';
 
-import '../../models/LabResultsModel.dart'; // This file now contains LabResultListItem
-import '../../models/medicalrecordlistitemsModel.dart'; // This is your MedicalRecord model
+import '../../models/LabResultsModel.dart';
+import '../../models/medicalrecordlistitemsModel.dart';
 
 enum FilterType { medicalEvents, labResults }
 
@@ -11,7 +11,6 @@ class MedicalRecordController extends GetxController {
   final ApiService _apiService = Get.find<ApiService>();
 
   final RxList<MedicalRecord> medicalRecords = <MedicalRecord>[].obs;
-  // Change LabResult to LabResultListItem here:
   final RxList<LabResultListItem> labResults = <LabResultListItem>[].obs; // New list for lab results
 
   final RxList<dynamic> filteredItems = <dynamic>[].obs; // To hold either MedicalRecords or LabResultListItems
@@ -79,7 +78,6 @@ class MedicalRecordController extends GetxController {
     try {
       isLoading(true);
       errorMessage('');
-      // The _apiService.getLabResults() method now expects LabResultListItem
       final fetchedResults = await _apiService.getLabResults();
       labResults.assignAll(fetchedResults);
     } catch (e) {
@@ -104,12 +102,11 @@ class MedicalRecordController extends GetxController {
           ).toList(),
         );
       }
-    } else { // FilterType.labResults
+    } else {
       if (query.isEmpty) {
         filteredItems.assignAll(labResults);
       } else {
         filteredItems.assignAll(
-          // Use LabResultListItem fields for filtering
           labResults.where((result) =>
           result.testName.toLowerCase().contains(query) ||
               result.formattedDate.toLowerCase().contains(query) ||

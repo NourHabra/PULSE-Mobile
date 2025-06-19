@@ -10,7 +10,6 @@ import 'package:pulse_mobile/services/http.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // *** IMPORTANT: Apply HttpOverrides here ***
   HttpOverrides.global = MyHttpOverrides();
   Get.put(ApiService());
   Get.put(StompService());
@@ -22,8 +21,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/splash1', // Your desired initial route
-      getPages: AppPages.pages, // Use the consolidated list
+      initialRoute: '/splash1',
+      getPages: AppPages.pages,
 
 
 

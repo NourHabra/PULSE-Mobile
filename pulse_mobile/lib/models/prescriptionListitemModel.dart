@@ -2,23 +2,23 @@ class Prescription {
   final int id;
   final String doctorName;
   final String doctorSpeciality;
-  final String notes; // Changed from validUntil
+  final String notes;
 
   Prescription({
     required this.id,
     required this.doctorName,
     required this.doctorSpeciality,
-    required this.notes, // Changed from validUntil
+    required this.notes,
   });
 
   factory Prescription.fromJson(Map<String, dynamic> json) {
     return Prescription(
-      id: json['prescriptionId'] ?? 0, // Adjusted to match your JSON (prescriptionId)
+      id: json['prescriptionId'] ?? 0,
       doctorName: json['doctor']['firstName'] != null && json['doctor']['lastName'] != null
           ? '${json['doctor']['firstName']} ${json['doctor']['lastName']}'
           : '',
       doctorSpeciality: json['doctor']['specialization'] ?? '',
-      notes: json['notes'] ?? '', // Changed from validUntil
+      notes: json['notes'] ?? '',
     );
   }
 }

@@ -68,10 +68,8 @@ class MySavedDetailsPage extends StatelessWidget {
                   name = item.name ?? '';
                   description = item.address ?? 'N/A';
                   type = 'pharmacy';
-                  // NEW: Navigation for Pharmacy (if applicable, or keep null)
                   cardOnTap = () {
                      Get.toNamed('/pharmacydetails', arguments: {'pharmacyId': item.id});
-                    // For now, no specific navigation for pharmacies, or add your pharmacy route.
 
                   };
                 } else {
@@ -88,7 +86,7 @@ class MySavedDetailsPage extends StatelessWidget {
                     onFavoriteTap: () {
                       controller.removeSavedItem(item);
                     },
-                    onTap: cardOnTap, // NEW: Pass the navigation callback
+                    onTap: cardOnTap,
                   ),
                 );
               },

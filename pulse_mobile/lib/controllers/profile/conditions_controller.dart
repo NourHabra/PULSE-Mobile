@@ -1,11 +1,9 @@
-// lib/controllers/conditions/conditions_controller.dart
 
 import 'package:get/get.dart';
 import '../../models/chronic_disease_model.dart'; // Import the new model
-import '../../services/connections.dart'; // Ensure ApiService is available
+import '../../services/connections.dart';
 
 class ConditionsController extends GetxController {
-  // Instance of ApiService to make API calls
   final ApiService _apiService = Get.find<ApiService>();
 
   // Observable list of ChronicDiseaseModel objects

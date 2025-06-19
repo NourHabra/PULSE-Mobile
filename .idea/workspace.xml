@@ -5,95 +5,49 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ad2fad05-a11c-4bc1-81f6-fbeb5db19c85" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/Labs/LabDetails_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/Labs/LabDetails_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/Labs/allTestsForLab_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/Labs/allTestsForLab_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/doctors/doctor_details_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/doctors/doctor_details_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/doctors/doctor_firstpage_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/doctors/doctor_firstpage_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/home1_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/home1_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/login/forgotPassword_binder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/login/forgotPassword_binder.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/login/forgotPassword_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/login/forgotPassword_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/login/login_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/login/login_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/login/varification_binder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/login/varification_binder.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/login/varification_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/login/varification_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/emergencyEvents/emergencyEvent_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/emergencyEvents/emergencyEvent_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/emergencyEvents/emergency_event_binder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/emergencyEvents/emergency_event_binder.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/medical_record/labResult_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/medical_record/labResult_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/medical_record/medicalRecordDetails_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/medical_record/medicalRecordDetails_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/medical_record/medicalrecordList_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/medical_record/medicalrecordList_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/medications/PrescriptionList_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/medications/PrescriptionList_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/medications/prescription_Details_binder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/medications/prescription_Details_binder.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/medications/prescription_details_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/medications/prescription_details_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/pharmacy/pharmacy_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/pharmacy/pharmacy_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/pharmacy/pharmacy_details_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/pharmacy/pharmacy_details_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/profile/allergies_binder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/profile/allergies_binder.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/profile/allergies_contorller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/profile/allergies_contorller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/profile/changePassword_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/profile/changePassword_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/profile/conditions_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/profile/conditions_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/profile/editProfile_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/profile/editProfile_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/profile/mysavedDetails_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/profile/mysavedDetails_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/signup/signup_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/signup/signup_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/splash/splash_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/splash/splash_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/controllers/qrcode_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/controllers/qrcode_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/models/doctor_model_featured_homepage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/models/doctor_model_featured_homepage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/models/generalDoctorModel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/models/generalDoctorModel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/models/emergencyEvent.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/models/emergencyEvent.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/models/medical_record_details_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/models/medical_record_details_model.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/models/medicalrecordlistitemsModel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/models/medicalrecordlistitemsModel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/models/mySavedDoctor_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/models/mySavedDoctor_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/models/mySavedLab_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/models/mySavedLab_model.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/models/mySavedPharmacy_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/models/mySavedPharmacy_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/models/profile_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/models/profile_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/models/signupModel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/models/signupModel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/routes/bottomBar_routes.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/routes/doctor_routes.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/routes/home_routes.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/routes/lab_routes.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/routes/login_routes.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/routes/medications&amp;prescriptions_routes.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/routes/profile_routes.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/routes/signup_routes.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/routes/splash_routes.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/doctor_screens/doctor_details_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/doctor_screens/doctor_details_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/doctor_screens/first_doctor_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/doctor_screens/first_doctor_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/emergencyEvents_screens/emergencyEvent_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/emergencyEvents_screens/emergencyEvent_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/models/prescriptionListitemModel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/models/prescriptionListitemModel.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/home_screens/home_screen1.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/home_screens/home_screen1.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/home_screens/test2.dart" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/lab_screens/LabDetailsScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/lab_screens/LabDetailsScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/login_screens/forgot.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/login_screens/forgot.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/login_screens/login.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/login_screens/login.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/login_screens/varification.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/login_screens/varification.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/medicalDrug_screens/prescriptionList_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/medicalDrug_screens/prescriptionList_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/medical_record_screens/medicalRecordDetails_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/medical_record_screens/medicalRecordDetails_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/medical_record_screens/medicalRecordList_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/medical_record_screens/medicalRecordList_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/notification_screens/notification_screen1.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/notification_screens/notification_screen1.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/categoriesDetails_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/categoriesDetails_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/changePassword_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/changePassword_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/editProfile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/editProfile_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/medicationsAndPrescriptions_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/medicationsAndPrescriptions_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/medicalDrug_screens/prescription_details_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/medicalDrug_screens/prescription_details_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/medical_record_screens/labResult_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/medical_record_screens/labResult_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/allergies_screens.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/allergies_screens.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/conditions.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/conditions.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/mySavedDeatils_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/mySavedDeatils_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/mysaved_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/mysaved_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/profile_screen1.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/profile_screen1.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/settings_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/profile_screens/settings_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/search_screens/search_screen1.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/signup_screens/signup1_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/signup_screens/signup1_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/signup_screens/signup2_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/signup_screens/signup2_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/signup_screens/signup3_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/signup_screens/signup3_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/screens/splash_screens/splash_screen2.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/screens/splash_screens/splash_screen2.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/services/Stom_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/services/Stom_service.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/services/connections.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/services/connections.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/theme/app_light_mode_colors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/theme/app_light_mode_colors.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/Emergncy_button_homepage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/Emergncy_button_homepage.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/LabCard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/LabCard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/appbar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/appbar.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/bottombar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/bottombar.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/circular_doctor_widget_homepage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/circular_doctor_widget_homepage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/currentMedication.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/currentMedication.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/editProfile_textfield.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/editProfile_textfield.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/homeAppBar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/homeAppBar.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/med&amp;presListItem.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/med&amp;presListItem.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/medialRecordListItem.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/medialRecordListItem.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/mySavedCard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/mySavedCard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/mysavedCategory.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/mysavedCategory.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/prescriptionsListItem.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/prescriptionsListItem.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/profileMenuOption.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/profileMenuOption.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/rectangular_category_item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/rectangular_category_item.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/skip_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/skip_button.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/testItemCard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/testItemCard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/lib/widgets/vital_card_homepage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/lib/widgets/vital_card_homepage.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/linux/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/linux/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/linux/flutter/generated_plugin_registrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/linux/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/linux/flutter/generated_plugins.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/windows/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/windows/flutter/generated_plugin_registrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pulse_mobile/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/pulse_mobile/windows/flutter/generated_plugins.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

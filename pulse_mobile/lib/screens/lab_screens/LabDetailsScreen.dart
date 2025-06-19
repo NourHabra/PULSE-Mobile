@@ -46,7 +46,7 @@ class LabDetailsScreen extends StatelessWidget {
                           _labDetailsController.isFavorited.value // Use observable from controller
                               ? Icons.favorite
                               : Icons.favorite_border_outlined,
-                          color: AppLightModeColors.mainColor, // Or a color that suits your theme
+                          color: AppLightModeColors.mainColor,
                           size: 30,
                         ),
                         onPressed: () {

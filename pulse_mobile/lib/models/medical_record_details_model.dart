@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'dart:developer'; // Import for log
+import 'dart:developer';
 
 class MedicalRecordDetails {
   final int? entryId;
@@ -12,6 +12,8 @@ class MedicalRecordDetails {
   final String? emergencyNotes;
   final String? prescriptionNotes;
   final String? prescriptionStatus;
+
+
 
   MedicalRecordDetails({
     this.entryId,
@@ -29,14 +31,20 @@ class MedicalRecordDetails {
   factory MedicalRecordDetails.fromJson(Map<String, dynamic> json) {
     log('MedicalRecordDetails.fromJson received JSON: $json');
 
-    // Check parsing of entryId
-    log('Attempting to parse medicalRecordEntryId. Value in JSON: ${json['medicalRecordEntryId']}');
-    final int? parsedEntryId = json['medicalRecordEntryId'] as int?; // This was the main suspect
+    log('Attempting to parse entryId. Value in JSON: ${json['entryId']}');
+    final int? parsedEntryId = json['entryId'] as int?;
     log('Parsed entryId: $parsedEntryId');
 
+
     String date = 'N/A';
-    if (json['timestamp'] is List) {
-      List<int> timestamp = List<int>.from(json['timestamp']);
+    dynamic rawTimestamp = json['timestamp'];
+    if (json['medicalRecordEntry'] != null && json['medicalRecordEntry']['timestamp'] != null) {
+      rawTimestamp = json['medicalRecordEntry']['timestamp'];
+    }
+
+
+    if (rawTimestamp is List) {
+      List<int> timestamp = List<int>.from(rawTimestamp);
       if (timestamp.length >= 3) {
         try {
           DateTime dateTime = DateTime(
@@ -47,19 +55,19 @@ class MedicalRecordDetails {
           );
           date = DateFormat('d/M/yyyy').format(dateTime);
         } catch (e) {
-          log('Error parsing timestamp in MedicalRecordDetails: $e');
+          log('Error parsing list timestamp in MedicalRecordDetails: $e');
         }
       }
-    } else if (json['timestamp'] is String && json['timestamp'].isNotEmpty) {
+    } else if (rawTimestamp is String && rawTimestamp.isNotEmpty) {
       try {
-        DateTime dateTime = DateTime.parse(json['timestamp']);
+        DateTime dateTime = DateTime.parse(rawTimestamp);
         date = DateFormat('d/M/yyyy').format(dateTime);
       } catch (e) {
         log('Error parsing string timestamp in MedicalRecordDetails: $e');
       }
     }
 
-    String doctorName = 'Emergency event';
+    String doctorName = 'N/A';
     String doctorSpecialty = 'N/A';
 
     if (json['diagnosis'] != null && json['diagnosis']['doctor'] != null) {
@@ -73,8 +81,10 @@ class MedicalRecordDetails {
       doctorSpecialty = 'Emergency Worker';
     }
 
-    final String? officialDiagnosis = json['diagnosis']?['officialDiagnosis'] as String?;
+
+    final String? officialDiagnosis = json['diagnosis']?['description'] as String?;
     final String? diagnosisFollowUps = json['diagnosis']?['followUps'] as String?;
+
     final String? emergencyNotes = json['emergencyEvent']?['notes'] as String?;
     final String? prescriptionNotes = json['prescription']?['notes'] as String?;
     final String? prescriptionStatus = json['prescription']?['status'] as String?;

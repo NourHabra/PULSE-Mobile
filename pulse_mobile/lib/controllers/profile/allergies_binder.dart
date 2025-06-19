@@ -7,7 +7,6 @@ import 'allergies_contorller.dart';
 class AllergiesBinding extends Bindings {
   @override
   void dependencies() {
-    // Register the AllergiesController for dependency injection
     // Get.put ensures the controller is initialized and available
     Get.put<AllergiesController>(AllergiesController());
   }

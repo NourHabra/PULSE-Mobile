@@ -22,7 +22,6 @@ class MedicalRecordDetailsController extends GetxController {
     try {
       isLoading(true);
       errorMessage('');
-      // Assuming getMedicalRecordDetails method in ApiService handles the API call and returns a parsed MedicalRecordDetails object
       final details = await _apiService.getMedicalRecordDetails(medicalRecordId);
       medicalRecordDetails.value = details;
     } catch (e) {

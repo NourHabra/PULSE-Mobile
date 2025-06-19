@@ -1,4 +1,3 @@
-// lib/controllers/profile/mysavedDetails_controller.dart
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,7 +15,7 @@ class MySavedDetailsController extends GetxController {
 
   final String categoryName;
   final int categoryId;
-  final List<String> savedItemIds; // This might become redundant for filtering purposes
+  final List<String> savedItemIds;
 
   MySavedDetailsController({
     required this.categoryName,
@@ -67,8 +66,7 @@ class MySavedDetailsController extends GetxController {
 
       if (convertedModels != null) {
         print('Fetched and converted models count for $categoryName: ${convertedModels.length}');
-        // As discussed, if the API directly returns only saved items,
-        // you can assign all fetched models directly without further filtering.
+
         savedItems.assignAll(convertedModels);
       } else {
         errorMessage.value = 'Failed to load saved $categoryName (convertedModels is null).';
@@ -96,7 +94,7 @@ class MySavedDetailsController extends GetxController {
       itemName = 'Laboratory';
       print('Attempting to remove saved Laboratory with ID: $idToRemove');
     } else if (itemToRemove is PharmacyModel) {
-      idToRemove = itemToRemove.id; // Use 'id' for PharmacyModel
+      idToRemove = itemToRemove.id;
       itemName = 'Pharmacy';
       print('Attempting to remove saved Pharmacy with ID: $idToRemove');
     } else {
@@ -113,19 +111,17 @@ class MySavedDetailsController extends GetxController {
     }
 
     try {
-      // Make the specific API call based on the item type
       if (itemToRemove is SavedDoctorModel) {
         await _apiService.removeSavedDoctor(idToRemove);
       } else if (itemToRemove is SavedLaboratoryModel) {
         await _apiService.removeSavedLaboratory(idToRemove);
       }
 
-      // If API call is successful, remove the item from the observable list
       savedItems.removeWhere((item) {
         dynamic currentItemId;
         if (item is SavedDoctorModel) currentItemId = item.doctorUserId;
         else if (item is SavedLaboratoryModel) currentItemId = item.id;
-        else if (item is PharmacyModel) currentItemId = item.id; // Though not removed, keeping consistent
+        else if (item is PharmacyModel) currentItemId = item.id;
         return currentItemId == idToRemove;
       });
 

@@ -62,9 +62,7 @@ class LabResultDetailsScreen extends StatelessWidget {
                     _buildHeaderSection(
                       context,
                       testName: details.test?.name ?? 'N/A',
-                      // Use medicalRecordEntry's formattedDate, or add a 'timestamp' to LabResultDetails if it exists
                       date: details.medicalRecordEntry?.formattedDate ?? 'N/A',
-                      // Assuming date comes from medicalRecordEntry
                       testType: details.test?.type ?? 'N/A',
                       laboratoryName: details.laboratory?.name ?? 'N/A',
                     ),

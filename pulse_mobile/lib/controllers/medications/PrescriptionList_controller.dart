@@ -6,7 +6,6 @@ import '../../services/connections.dart';
 class PrescriptionController extends GetxController {
   final ApiService _apiService = Get.find<ApiService>();
   RxList<Prescription> _allPrescriptions = <Prescription>[].obs;
-  // This will hold the unfiltered list of prescriptions for filtering purposes
   List<Prescription> _originalPrescriptions = [];
 
   RxList<Prescription> get prescriptions => _allPrescriptions;
@@ -19,7 +18,6 @@ class PrescriptionController extends GetxController {
   void onInit() {
     super.onInit();
     fetchPrescriptions();
-    // Use debounce to prevent frequent filtering on every keystroke
     debounce(searchQuery, _filterPrescriptions, time: const Duration(milliseconds: 300));
   }
 
@@ -41,7 +39,6 @@ class PrescriptionController extends GetxController {
     }
   }
 
-  // <--- IMPORTANT CHANGE IS HERE --->
   void goToPrescriptionDetail(int prescriptionId) {
     print('Navigating to /prescription-details with ID: $prescriptionId'); // Debugging print
     Get.toNamed(
@@ -56,12 +53,11 @@ class PrescriptionController extends GetxController {
 
   void _filterPrescriptions(String query) {
     if (query.isEmpty) {
-      _allPrescriptions.assignAll(_originalPrescriptions); // Reset to original list
+      _allPrescriptions.assignAll(_originalPrescriptions);
     } else {
-      // Adjusted filtering logic to use direct properties from the Prescription model
       _allPrescriptions.assignAll(_originalPrescriptions.where((p) =>
-      p.doctorName.toLowerCase().contains(query.toLowerCase()) || // Use p.doctorName directly
-          p.doctorSpeciality.toLowerCase().contains(query.toLowerCase()) // Use p.doctorSpeciality directly
+      p.doctorName.toLowerCase().contains(query.toLowerCase()) ||
+          p.doctorSpeciality.toLowerCase().contains(query.toLowerCase())
       ).toList());
     }
   }

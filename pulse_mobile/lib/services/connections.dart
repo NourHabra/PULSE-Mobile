@@ -35,7 +35,7 @@ import 'dart:developer';
 import 'package:http/io_client.dart';
 
 class ApiService extends GetxService {
-  final String baseUrl = 'https://192.168.210.222:8443';
+  final String baseUrl = 'https://192.168.153.1:8443';
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   final http.Client _httpClient =
   _createHttpClient(); // Use custom client for HTTPS
@@ -80,7 +80,7 @@ class ApiService extends GetxService {
 
     final headers = {
       'Authorization': 'Bearer $token',
-      'Content-Type': 'application/json', // Assuming all PUT requests send JSON
+      'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
 
@@ -117,20 +117,16 @@ class ApiService extends GetxService {
     try {
       final response = await put(
         '/api/v1/consents/$consentId', // The endpoint path
-        queryParams: {'decision': decision}, // Your query parameter
+        queryParams: {'decision': decision},
       );
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        // Successful response (2xx codes)
         log('Consent ID $consentId $decision successfully.');
-        // You can parse response.body if the API returns data on success
       } else {
-        // Handle API errors based on status code
         String errorMessage = 'Failed to $decision consent for ID $consentId. Status: ${response.statusCode}';
         if (response.body.isNotEmpty) {
           try {
             final errorData = json.decode(response.body);
-            // Assuming your API returns an 'message' field for errors
             if (errorData.containsKey('message')) {
               errorMessage += ' - ${errorData['message']}';
             }
@@ -169,12 +165,10 @@ class ApiService extends GetxService {
         final Map<String, dynamic> body = jsonDecode(response.body);
         final String? message = body['message']; // Get the message from the response
 
-        // --- CORRECTED LOGIC HERE ---
-        // If the message explicitly indicates OTP sent, it's a success leading to 2FA
+
         if (message != null && message.contains("OTP sent to your email")) {
           print('OTP sent, proceeding to 2FA verification.');
-          // The userId (if available) can be passed here if needed by TwoFactorController arguments,
-          // but email is sufficient as per current 2FA API spec.
+
           return true; // Indicate success for navigation to 2FA
         }
         else {
@@ -230,10 +224,8 @@ class ApiService extends GetxService {
         final Map<String, dynamic> body = jsonDecode(response.body);
         final Profile profile = Profile.fromJson(body);
 
-        // Assuming the 2FA response also contains the token
-        // You might need to adjust the backend response to include the token directly
-        // in the root of the JSON if it's not nested within the Profile data.
-        final String? token = body['token']; // Assuming 'token' is a top-level key in the response
+
+        final String? token = body['token'];
 
         if (token != null) {
           await saveToken(token);
@@ -282,7 +274,6 @@ class ApiService extends GetxService {
         // Fallback if response body is not valid JSON
       }
       print('Error sending OTP: $errorMessage'); // Error message in terminal
-      // Optionally re-throw the error if you want the calling controller to handle it explicitly
       // throw Exception(errorMessage);
     }
   }
@@ -313,7 +304,6 @@ class ApiService extends GetxService {
         // Fallback if response body is not valid JSON
       }
       print('Error resetting password: $errorMessage'); // Error message in terminal
-      // Optionally re-throw the error if you want the calling controller to handle it explicitly
       // throw Exception(errorMessage);
     }
   }
@@ -329,9 +319,7 @@ class ApiService extends GetxService {
     );
     return response.statusCode == 200;
   }
-  // User Profile Services
-  ////get profile
-  // User Profile Services (inside your ApiService class)
+
   Future<Profile> getUserProfile() async {
     final String? token = await getToken();
     if (token == null) {
@@ -492,8 +480,7 @@ class ApiService extends GetxService {
     try {
       final request = http.MultipartRequest('POST', url);
 
-      // --- CRITICAL CHANGE: Send 'data' as application/json ---
-      // This ensures your JSON user data is sent with the correct content type.
+
       request.files.add(http.MultipartFile.fromString(
         'data',
         jsonEncode(user.toJson()), // User data as JSON string
@@ -503,8 +490,7 @@ class ApiService extends GetxService {
       // Add the 'picture' file if it exists
       if (user.pictureFile != null) {
         print('DEBUG: Attempting to add picture file from path: ${user.pictureFile!.path}');
-        // Using http.MultipartFile.fromPath without explicit contentType
-        // This will let the http package try to infer the content type.
+
         request.files.add(await http.MultipartFile.fromPath(
           'picture',
           user.pictureFile!.path,
@@ -514,8 +500,7 @@ class ApiService extends GetxService {
       // Add the 'idImage' file if it exists
       if (user.idImageFile != null) {
         print('DEBUG: Attempting to add ID image file from path: ${user.idImageFile!.path}');
-        // Using http.MultipartFile.fromPath without explicit contentType
-        // This will let the http package try to infer the content type.
+
         request.files.add(await http.MultipartFile.fromPath(
           'idImage',
           user.idImageFile!.path,
@@ -821,7 +806,6 @@ class ApiService extends GetxService {
 
     if (response.statusCode == 200) {
       print(response.body);
-      // Assuming the API returns the URL directly in the response body
       return response.body;
     } else {
       throw Exception('Failed to load doctor map URL: ${response.statusCode}');
@@ -1417,8 +1401,7 @@ class ApiService extends GetxService {
 
       if (response.statusCode == 200) {
         print('DEBUG: Successfully fetched pharmacies. Response body length: ${response.body.length}');
-        // Parse the JSON response body into a list of PharmacyModel objects.
-        return parsePharmacies(response.body); // Assuming parsePharmacies is a helper function
+        return parsePharmacies(response.body);
       } else {
         print('ERROR: Failed to load pharmacies: ${response.statusCode} ${response.body}');
         throw Exception('Failed to load pharmacies: ${response.statusCode}');

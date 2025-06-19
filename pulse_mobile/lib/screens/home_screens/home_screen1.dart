@@ -16,7 +16,7 @@ import '../../theme/app_light_mode_colors.dart'; // Import your colors for consi
 
 // Import the DoctorDetailsScreen
 import '../doctor_screens/doctor_details_screen.dart';
-import '../pharmacy/pharmacy_screen.dart'; // <--- ADD THIS IMPORT
+import '../pharmacy/pharmacy_screen.dart';
 
 class HomeScreen1 extends StatelessWidget {
   const HomeScreen1({super.key});
@@ -104,11 +104,10 @@ class HomeScreen1 extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: CircularDoctorWidget(
                       imageUrl: doctor.pictureUrl,
-                      id: doctor.id.toString(), // Ensure doctor.id is used here
+                      id: doctor.id.toString(),
                       name: doctor.fullName,
                       radius: 40.0,
                       onTap: () {
-                        // MODIFIED: Navigate to DoctorDetailsScreen and pass doctor.id
                         Get.to(
                               () => DoctorDetailsScreen(),
                           arguments: {
@@ -261,17 +260,15 @@ class HomeScreen1 extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 10.0),
                     child: Text(
                       controller.vitalsErrorMessage.value,
-                      // Change color to grey if it's just an informative message,
-                      // or keep red for actual errors.
+
                       style: const TextStyle(color: Colors.grey),
                     ),
                   ),
 
-                // Now, always attempt to build the vital cards if the list is not empty
                 if (controller.vitalsList.isEmpty)
                   const Center(
                     child: Text(
-                      'No vitals data available.', // This should ideally only show if _createDefaultVitals also failed (highly unlikely)
+                      'No vitals data available.',
                       style: TextStyle(color: Colors.grey),
                     ),
                   )

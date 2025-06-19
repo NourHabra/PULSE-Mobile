@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import '../services/connections.dart'; // Import your ApiService
-import '../theme/app_light_mode_colors.dart'; // Import your colors for consistent styling
+import '../services/connections.dart';
+import '../theme/app_light_mode_colors.dart';
 
 class QrScannerController extends GetxController {
   final ApiService _apiService = Get.find<ApiService>();
@@ -18,10 +18,12 @@ class QrScannerController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print('DEBUG: QrScannerController onInit called. Attempting to start scanner.');
     _startScanner(); // Start scanner immediately when controller is initialized
   }
 
   void onDetect(BarcodeCapture capture) async {
+    print('DEBUG: onDetect called. _isProcessingScan: ${_isProcessingScan.value}');
     if (_isProcessingScan.value) {
       return; // Prevent re-processing if already handling a scan
     }
@@ -35,9 +37,12 @@ class QrScannerController extends GetxController {
 
       if (rawValue != null && rawValue.isNotEmpty) {
         scanResult.value = rawValue;
-        print('Scanned QR Code: ${scanResult.value}');
+        print('DEBUG: Scanned QR Code Raw Value: ${scanResult.value}');
 
-        _stopScanner(); // Stop the scanner immediately after a successful detection
+        // Stop the scanner immediately after a successful detection
+        // This is crucial if you only want to process one QR at a time.
+        _stopScanner();
+        print('DEBUG: Scanner stopped after detection.');
 
         // Attempt to parse doctor ID
         try {
@@ -51,48 +56,59 @@ class QrScannerController extends GetxController {
             ),
           );
 
+          print('DEBUG: Calling API to post consent for doctor ID: $doctorId');
           final bool success = await _apiService.postConsentForDoctor(doctorId);
+          print('DEBUG: API response success: $success');
 
           if (success) {
             _showConsentSuccessDialog(doctorId); // Call the custom success dialog
           } else {
             Get.snackbar(
               'Failed',
-              'An error occurred while sending consent. Please try again.', // User-friendly message
+              'An error occurred while sending consent. Please try again.',
               snackPosition: SnackPosition.BOTTOM,
               backgroundColor: Colors.red,
               colorText: Colors.white,
             );
           }
         } on FormatException {
+          print('ERROR: FormatException - Raw QR value was not an integer: $rawValue');
           Get.snackbar(
             'Error',
-            'Invalid QR Code. Please ensure you are scanning a valid Doctor ID.', // User-friendly message
+            'Invalid QR Code. Please ensure you are scanning a valid Doctor ID.',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.orange,
             colorText: Colors.white,
           );
         } catch (e) {
+          print('ERROR: Unexpected error during QR processing: $e');
           Get.snackbar(
             'Error',
-            'An unexpected error occurred. Please try again.', // User-friendly message
+            'An unexpected error occurred. Please try again.',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.red,
             colorText: Colors.white,
           );
         } finally {
           _isProcessingScan.value = false; // Reset flag
-          // If we didn't navigate back, restart scanner for next scan (e.g., if API call fails)
-          if (Get.currentRoute == '/QrScannerScreen') { // Check if still on scanner screen
-            _startScanner();
+          print('DEBUG: _isProcessingScan reset to false. Current route: ${Get.currentRoute}');
+          // If we didn't navigate back (e.g., API call failed or dialog not yet dismissed), restart scanner
+          // This ensures the scanner is active again if it's still the current screen.
+          // The `_showConsentSuccessDialog` calls `Get.back()` twice, which will remove this screen.
+          // So, this restart might only trigger if the API call fails or dialog is dismissed quickly.
+          if (Get.currentRoute == '/QrScannerScreen') {
+            _startScanner(); // Restart only if still on scanner screen
+            print('DEBUG: Restarting scanner because still on QrScannerScreen.');
+          } else {
+            print('DEBUG: Not restarting scanner because navigated away from QrScannerScreen.');
           }
         }
       } else {
         scanResult.value = 'No data found in QR Code.';
-        print('No data found in QR Code.');
+        print('DEBUG: No data found in QR Code.');
         Get.snackbar(
           'No Data',
-          'The scanned QR code contains no readable data. Please try again.', // User-friendly message
+          'The scanned QR code contains no readable data. Please try again.',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.orange,
           colorText: Colors.white,
@@ -101,24 +117,28 @@ class QrScannerController extends GetxController {
         _startScanner(); // Restart scanner if no data was processed
       }
     } else {
-      scanResult.value = 'No barcode detected.';
-      print('No barcode detected.');
-      _isProcessingScan.value = false;
+      scanResult.value = 'No barcode detected (capture was empty).';
+      print('DEBUG: No barcode detected in capture.');
+      // Do not reset _isProcessingScan here, as it might not have been set if barcodes was empty
     }
   }
 
   Future<void> _startScanner() async {
-    if (_isScannerActive.value) return;
+    if (_isScannerActive.value) {
+      print('DEBUG: Scanner already active. Skipping start.');
+      return;
+    }
     try {
+      print('DEBUG: Attempting to start scanner controller.');
       await scannerController.start();
       _isScannerActive.value = true;
-      print('Scanner started successfully');
+      print('DEBUG: Scanner started successfully.');
     } catch (e) {
-      print('Failed to start scanner: $e');
+      print('ERROR: Failed to start scanner: $e');
       _isScannerActive.value = false;
       Get.snackbar(
         'Camera Error',
-        'Failed to start camera. Please check camera permissions and try again.', // User-friendly message
+        'Failed to start camera. Please check camera permissions and try again.',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -127,18 +147,23 @@ class QrScannerController extends GetxController {
   }
 
   Future<void> _stopScanner() async {
-    if (!_isScannerActive.value) return;
+    if (!_isScannerActive.value) {
+      print('DEBUG: Scanner not active. Skipping stop.');
+      return;
+    }
     try {
+      print('DEBUG: Attempting to stop scanner controller.');
       await scannerController.stop();
       _isScannerActive.value = false;
-      print('Scanner stopped successfully');
+      print('DEBUG: Scanner stopped successfully.');
     } catch (e) {
-      print('Failed to stop scanner: $e');
-      _isScannerActive.value = false;
+      print('ERROR: Failed to stop scanner: $e');
+      // No snackbar here, as it might interfere with main flow after successful scan
     }
   }
 
   void toggleScanner() {
+    print('DEBUG: toggleScanner called. Current state: ${_isScannerActive.value}');
     if (_isScannerActive.value) {
       _stopScanner();
     } else {
@@ -183,6 +208,9 @@ class QrScannerController extends GetxController {
                 child: ElevatedButton(
                   onPressed: () {
                     Get.back(); // Dismiss the dialog
+                    // The double Get.back() will pop the current QR scanner screen
+                    // and then pop the screen that navigated to it.
+                    // If you want to stay on the scanner screen after success, remove the second Get.back().
                     Get.back(); // Navigate back to the previous screen (e.g., Home)
                   },
                   style: ElevatedButton.styleFrom(
@@ -210,6 +238,7 @@ class QrScannerController extends GetxController {
 
   @override
   void onClose() {
+    print('DEBUG: QrScannerController onClose called. Disposing scanner controller.');
     scannerController.dispose();
     super.onClose();
   }

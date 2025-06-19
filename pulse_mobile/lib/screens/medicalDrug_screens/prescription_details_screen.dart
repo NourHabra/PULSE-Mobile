@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pulse_mobile/controllers/medications/prescription_details_controller.dart';
 import 'package:pulse_mobile/widgets/DrugCard.dart';
-import 'package:pulse_mobile/widgets/appbar.dart'; // Assuming this provides a CustomAppBar
+import 'package:pulse_mobile/widgets/appbar.dart';
 import 'package:pulse_mobile/widgets/bottombar.dart';
 import 'package:pulse_mobile/services/connections.dart'; // Import ApiService to use Get.find<ApiService>()
 
 import '../../models/prescription_details.dart';
-import '../../theme/app_light_mode_colors.dart'; // Assuming this provides a CustomBottomNavBar
+import '../../theme/app_light_mode_colors.dart';
 
 
 class PrescriptionDetailsPage extends StatelessWidget {
@@ -15,7 +15,6 @@ class PrescriptionDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Correctly initialize the controller by passing the ApiService instance
     final PrescriptionDetailsController controller = Get.put(PrescriptionDetailsController(apiService: Get.find<ApiService>()));
 
     return Scaffold(
@@ -91,7 +90,7 @@ class PrescriptionDetailsPage extends StatelessWidget {
 
                   const SizedBox(height: 30),
                   Column(
-                    // --- MODIFIED HERE ---
+
                     crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start (left)
                     children: [
                       Text(
@@ -110,7 +109,7 @@ class PrescriptionDetailsPage extends StatelessWidget {
           }
         }),
       ),
-      bottomNavigationBar: CustomBottomNavBar(), // Assuming CustomBottomNavBar is provided
+      bottomNavigationBar: CustomBottomNavBar(),
     );
   }
 }

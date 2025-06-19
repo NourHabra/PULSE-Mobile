@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pulse_mobile/widgets/appbar.dart';
-import 'package:pulse_mobile/widgets/bottombar.dart'; // Assuming you have a custom bottom nav bar
+import 'package:pulse_mobile/widgets/bottombar.dart';
 import '../../controllers/profile/allergies_contorller.dart';
-import '../../theme/app_light_mode_colors.dart'; // Assuming your theme is here
+import '../../theme/app_light_mode_colors.dart';
 
 class AllergiesScreen extends StatelessWidget {
   const AllergiesScreen({super.key});

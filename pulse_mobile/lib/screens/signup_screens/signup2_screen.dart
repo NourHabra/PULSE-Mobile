@@ -132,7 +132,7 @@ class SignUpPage2 extends GetView<SignUpController> {
                       style: TextStyle(color: Colors.grey)),
                   TextButton(
                     onPressed: () {
-                      Get.toNamed('/login'); // Assuming you have a /login route
+                      Get.toNamed('/login');
                     },
                     child: const Text(
                       'Log in',

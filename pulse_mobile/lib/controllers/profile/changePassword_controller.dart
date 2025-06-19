@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../services/connections.dart'; // Import ApiService
+import '../../services/connections.dart';
 
 class ChangePasswordController extends GetxController {
   // Get the ApiService instance

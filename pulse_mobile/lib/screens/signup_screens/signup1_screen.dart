@@ -78,7 +78,7 @@ class SignUpPage1 extends GetView<SignUpController> {
                     style: TextStyle(color: Colors.grey)),
                 TextButton(
                   onPressed: () {
-                    Get.toNamed('/login'); // Assuming you have a /login route
+                    Get.toNamed('/login');
                   },
                   child: const Text(
                     'Log in',
@@ -88,51 +88,9 @@ class SignUpPage1 extends GetView<SignUpController> {
               ],
             ),
             const SizedBox(height: 30),
-            const Row(
-              children: [
-                Expanded(child: Divider(color: Colors.grey)),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Text('OR', style: TextStyle(color: Colors.grey)),
-                ),
-                Expanded(child: Divider(color: Colors.grey)),
-              ],
-            ),
+
             const SizedBox(height: 20),
-            OutlinedButton.icon(
-              onPressed: () {
-                // Handle Google Sign In
-              },
-              icon: Image.asset(
-                'assets/Google_Icon.webp', // Replace with your Google logo asset path
-                height: 24,
-              ),
-              label: const Text('Continue with Google',
-                  style: TextStyle(color: Colors.black)),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                side: BorderSide(color: Colors.grey.shade300),
-              ),
-            ),
-            const SizedBox(height: 10),
-            OutlinedButton.icon(
-              onPressed: () {
-                // Handle Apple Sign In
-              },
-              icon: const Icon(Icons.apple, color: Colors.black, size: 28),
-              label: const Text('Continue with Apple',
-                  style: TextStyle(color: Colors.black)),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                side: BorderSide(color: Colors.grey.shade300),
-              ),
-            ),
+
           ],
         ),
       ),

@@ -1,11 +1,10 @@
-// lib/models/medicalrecordlistitemsModel.dart
 import 'package:intl/intl.dart';
 
 class MedicalRecord {
   final int id;
   final String type;
   final String recordDate;
-  final bool hasLabResult; // Indicates if this record should be treated as a lab result
+  final bool hasLabResult;
 
   MedicalRecord({
     required this.id,
@@ -43,26 +42,19 @@ class MedicalRecord {
         ? json['medicalRecordEntry']['title'] as String
         : (json['title'] is String ? json['title'] as String : 'Unknown Medical Record');
 
-    // --- CRUCIAL CHANGE HERE: How hasLabResult is determined ---
-    // Assuming titles like "Blood test result" or those containing "lab result"
-    // are the actual indicators that it's a lab result entry.
-    // You might need to adjust this condition based on all possible "lab result" titles from your API.
+
     final bool isLabResultBasedOnTitle = (recordTitle.toLowerCase().contains('lab result')) ||
         (recordTitle.toLowerCase().contains('blood test result'));
 
-    // We can still keep the check for the 'labResult' field being non-null/non-empty,
-    // just in case the API starts sending it properly in the future.
-    // Use an OR condition to combine title-based detection with actual field presence.
+
     final bool isLabResultBasedOnFieldPresence = json['labResult'] != null &&
         !(json['labResult'] is Map && (json['labResult'] as Map).isEmpty) &&
         !(json['labResult'] is List && (json['labResult'] as List).isEmpty) &&
         !(json['labResult'] is String && (json['labResult'] as String).isEmpty);
 
-    // Final decision for hasLabResult: true if title indicates it OR if the labResult field is actually populated.
     final bool finalHasLabResult = isLabResultBasedOnTitle || isLabResultBasedOnFieldPresence;
 
 
-    // --- Debugging prints (keep these for now, they are very helpful) ---
     print('\n--- Parsing Record ID: ${recordId != -1 ? recordId : 'Unknown'} ---');
     print('  Original JSON entry: ${json}');
     print('  Value of json[\'labResult\']: ${json['labResult']}');
@@ -72,13 +64,12 @@ class MedicalRecord {
     print('  Calculated isLabResultBasedOnFieldPresence: $isLabResultBasedOnFieldPresence');
     print('  Final Calculated hasLabResult: $finalHasLabResult');
     print('-------------------------------------\n');
-    // --- END Debugging prints ---
 
     return MedicalRecord(
       id: recordId,
       type: recordTitle,
       recordDate: formattedDate,
-      hasLabResult: finalHasLabResult, // Use the new finalHasLabResult
+      hasLabResult: finalHasLabResult,
     );
   }
 }

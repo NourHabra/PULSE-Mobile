@@ -14,7 +14,6 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   // Use GetX controller for theme state
-  final ThemeService _themeService = Get.put(ThemeService());
 
   @override
   void initState() {
@@ -46,7 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
             CustomListItem(
               title: 'Reset Password',
               onTap: () {
-                Get.toNamed('/changepassword');
+                Get.toNamed('/login');
               },
             ),
             Padding(
@@ -57,22 +56,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             // Dark Mode Switch
-            Obx(() => SwitchListTile(
-              title: Text(
-                'Dark Mode',
-                style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyLarge?.color, // Adjust text color based on theme
-                ),
-              ),
-              value: _themeService.isDarkMode.value,
-              onChanged: (bool value) {
-                _themeService.saveThemeToPrefs(value); // Save and update theme
-              },
-              activeColor: Theme.of(context).primaryColor, // Example: Use app's primary color
-              inactiveThumbColor: AppLightModeColors.textFieldBorder, // Example: Lighter color for inactive thumb
-              trackOutlineColor: MaterialStateProperty.all(AppLightModeColors.textFieldBorder), // Example: Outline color
-              contentPadding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 8.0),
-            )),
+
           ],
         ),
       ),

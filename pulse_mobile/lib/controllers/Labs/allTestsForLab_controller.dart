@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import '../../models/labTestModel.dart';
-import '../../services/connections.dart'; // Assuming ApiService is here
+import '../../services/connections.dart';
 
 class AllTestsForLabController extends GetxController {
   final ApiService _apiService = Get.find<ApiService>(); // Get the ApiService instance

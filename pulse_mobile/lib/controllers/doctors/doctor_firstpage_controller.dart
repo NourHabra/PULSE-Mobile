@@ -27,7 +27,6 @@ class DoctorFirstpageController extends GetxController {
 
   // Filter Functionality
   RxString selectedFilter = ''.obs;
-  // --- MODIFIED: filterCategories names to match specialization ---
   final List<Map<String, String>> filterCategories = [
     {'d_id': '101', 'name': 'Cardiology', 'icon': 'assets/cardiology_600dp.png'},
     {'d_id': '102', 'name': 'Dermatology', 'icon': 'assets/accessibility_600dp.png'},
@@ -35,7 +34,6 @@ class DoctorFirstpageController extends GetxController {
     {'d_id': '104', 'name': 'Neurology', 'icon': 'assets/neurology_600dp_.png'},
     {'d_id': '105', 'name': 'Internal Medicine', 'icon': 'assets/gastroenterology_600dp.png'},
   ];
-  // --- END MODIFIED ---
 
   @override
   void onInit() {
